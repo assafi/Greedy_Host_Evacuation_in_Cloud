@@ -6,6 +6,8 @@
  */
 package il.ac.technion.misc;
 
+import il.ac.technion.sla.SLA;
+
 public class VM {
 	public final int id;
 	public final int ram;

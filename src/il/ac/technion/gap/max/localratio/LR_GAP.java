@@ -35,7 +35,7 @@ public class LR_GAP implements GAP_Alg {
 	}
 
 	@Override
-	@Requires({ "binsCapacities == itemSizes.length",
+	@Requires({ "binsCapacities.length == itemSizes.length",
 			"itemSizes.length == itemProfits.length" })
 	public Bin[] solve(int[] binsCapacities, int[][] itemSizes, int[][] itemProfits)
 			throws GAP_Exception {
