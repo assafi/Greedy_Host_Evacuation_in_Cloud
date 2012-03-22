@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import com.google.java.contract.Requires;
+
 public class Bin {
 
 	public final int capacity;
@@ -33,14 +35,21 @@ public class Bin {
 		this.id = _id;
 	}
 
-	public void assign(Item item) {
-		assignedItems.add(item);
+	@Requires("remainingCapacity >= item.size")
+	public boolean assign(Item item) {
+		if (!canHold(item)) {
+			return false;
+		}
 		remainingCapacity -= item.size;
+		return assignedItems.add(item);
 	}
 	
-	public void unassign(Item item) {
-		assignedItems.remove(item);
-		remainingCapacity += item.size;
+	public boolean unassign(Item item) {
+		if (assignedItems.remove(item)) {
+			remainingCapacity += item.size;
+			return true;
+		}
+		return false;
 	}
 	
 	public Collection<Item> assignedItems() {
@@ -49,5 +58,9 @@ public class Bin {
 	
 	public int remainingCapacity() {
 		return remainingCapacity;
+	}
+	
+	public boolean canHold(Item item) {
+		return remainingCapacity >= item.size;
 	}
 }

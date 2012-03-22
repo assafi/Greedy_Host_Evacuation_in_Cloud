@@ -13,10 +13,10 @@ import java.util.Set;
 
 public class Pair implements Comparable<Pair> {
 	public final int size;
-	public final int value;
+	public final double value;
 	public Set<Item> items = new HashSet<Item>();
 	
-	public Pair(int size, int value) {
+	public Pair(int size, double value) {
 		this.size = size;
 		this.value = value;
 	}
@@ -48,7 +48,13 @@ public class Pair implements Comparable<Pair> {
 	 */
 	@Override
 	public int compareTo(Pair aPair) {
-		return this.value - aPair.value;
+		if (this.value - aPair.value < 0) {
+			return -1;
+		}
+		if (this.value - aPair.value > 0) {
+			return 1;
+		}
+		return 0;
 	}
 	
 	@Override

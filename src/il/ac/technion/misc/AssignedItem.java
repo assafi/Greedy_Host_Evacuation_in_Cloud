@@ -15,7 +15,7 @@ public class AssignedItem extends Item {
 		return super.toString() + " assigned to " + assignedToBin.id;
 	}
 	
-	public AssignedItem(int id, int size, int value, Bin bin) {
+	public AssignedItem(int id, int size, double value, Bin bin) {
 		super(id, size, value);
 		this.assignedToBin = bin;
 	}

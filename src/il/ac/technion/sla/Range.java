@@ -9,15 +9,19 @@ package il.ac.technion.sla;
 import il.ac.technion.misc.HashCodeUtil;
 
 import com.google.java.contract.Requires;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 /**
  *	Represents a left-closed numeric range [a,b). 
  */
+@XStreamAlias("range")
 public class Range {
 
 	public final double left;
 	public final double right;
 	
+	@XStreamOmitField
 	private int fHashCode = 0; //Lazy evaluation
 	
 	@Requires("left < right")
@@ -51,6 +55,6 @@ public class Range {
 	}
 	
 	public boolean inRange(double value) {
-		return left >= value && value > right;
+		return left < value && value <= right;
 	}
 }

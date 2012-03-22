@@ -6,9 +6,12 @@
  */
 package il.ac.technion.sla;
 
+import il.ac.technion.misc.converters.SimplePeriodConverter;
+
 import org.joda.time.Period;
 
 import com.google.java.contract.Ensures;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
 
 /**
  *	Service License Agreement of Cloud Providers.
@@ -17,9 +20,20 @@ import com.google.java.contract.Ensures;
  */
 public abstract class SLA {
 
+	@XStreamConverter(SimplePeriodConverter.class)
 	final public Period billingPeriod;
+	
+	@XStreamConverter(SimplePeriodConverter.class)
 	private Period totalDownTime;
 	
+	/**
+	 * @param billingPeriod E.g: <code>new Period().withYears(1);</code>
+	 */
+	public SLA(Period billingPeriod) {
+		this.billingPeriod = billingPeriod;
+		this.totalDownTime = new Period();
+	}
+
 	/**
 	 * @return the current period of unavailability. 
 	 */
@@ -36,14 +50,6 @@ public abstract class SLA {
 		totalDownTime = totalDownTime.plus(downTime);
 	}
 
-	/**
-	 * @param billingPeriod E.g: <code>new Period().withYears(1);</code>
-	 */
-	public SLA(Period billingPeriod) {
-		this.billingPeriod = billingPeriod;
-		this.totalDownTime = new Period(0);
-	}
-	
 	/**
 	 * @return A percentage of yearly recorded availability.
 	 * e.g. 99.95, 99.99, 99.999 

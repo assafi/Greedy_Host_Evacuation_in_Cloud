@@ -9,10 +9,10 @@ package il.ac.technion.misc;
 
 public class Item {
 	public final int size;
-	public final int value;
+	public final double value;
 	public final int id;
 
-	public Item(int id, int size, int value) {
+	public Item(int id, int size, double value) {
 		this.size = size;
 		this.value = value;
 		this.id = id;

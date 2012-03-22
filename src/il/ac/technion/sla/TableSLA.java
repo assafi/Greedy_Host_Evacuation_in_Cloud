@@ -67,7 +67,7 @@ public class TableSLA extends SLA {
 			if (range == null) {
 				return false;
 			}
-			rValue = range.right;
+			rValue = range.left;
 			double compensationPerc = cTable.get(range);
 			if (100 >= compensationPerc && compensationPerc >= lastCompensation) {
 				lastCompensation = compensationPerc;
