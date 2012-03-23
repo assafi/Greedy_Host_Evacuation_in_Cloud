@@ -7,8 +7,15 @@
 package il.ac.technion.conversion;
 
 import il.ac.technion.misc.Host;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import junit.framework.Assert;
 
+import org.joda.time.Period;
 import org.junit.Test;
 
 import com.thoughtworks.xstream.XStream;
@@ -18,23 +25,16 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 public class HostConversionTest {
 
 	@Test
-	public void testConversion() {
-		Host h = new Host(1,10,100);
-		
-		String xmlDesc =
-			"<host>\n" + 
-			"  <bin>\n" + 
-			"    <id>1</id>\n" + 
-			"    <capacity>10</capacity>\n" + 
-			"  </bin>\n" +
-			"  <activationCost>100</activationCost>\n" +
-			"</host>";
+	public void testConversion() throws IOException {
+		Host h = new Host(1,10,100,Period.millis(1000));
 		
 		XStream xStream = new XStream(new DomDriver());
 		xStream.autodetectAnnotations(true);
-		Assert.assertEquals(xmlDesc,xStream.toXML(h));
 		
-		Host h2 = (Host)xStream.fromXML(xmlDesc);
+		xStream.toXML(h,new FileWriter("test-resources//host.xml"));
+		Assert.assertTrue(new File("test-resources//host.xml").exists());
+		
+		Host h2 = (Host)xStream.fromXML(new FileReader("test-resources//host.xml"));
 		Assert.assertEquals(h,h2);
 	}
 }

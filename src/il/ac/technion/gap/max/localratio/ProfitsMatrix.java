@@ -8,10 +8,12 @@ package il.ac.technion.gap.max.localratio;
 
 import java.util.Collection;
 
-public class ProfitsMatrix {
-	private int[][] profits;
+import com.google.java.contract.Requires;
 
-	public ProfitsMatrix(int[][] _profits) {
+public class ProfitsMatrix {
+	private double[][] profits;
+
+	public ProfitsMatrix(double[][] _profits) {
 		this.profits = _profits;
 	}
 
@@ -24,14 +26,15 @@ public class ProfitsMatrix {
 	 * @param chosenIndexes
 	 *          The indexes of the chosen items by Knapsack done on the
 	 *          pm.firstColumnIndex column.
-	 * @throws LastProfitColumnException
-	 *           In case pm does not include at least two columns
 	 */
-	private ProfitsMatrix(ProfitsMatrix pm, Collection<Integer> chosenIndexes)
-			throws LastProfitColumnException {
-		if (pm.lastColumn())
-			throw new LastProfitColumnException();
-		this.profits = new int[pm.profits.length - 1][pm.profits[0].length];
+	@Requires({
+		"pm != null",
+		"chosenIndexes != null",
+		"!pm.lastColumn()",
+		"false"
+		})
+	private ProfitsMatrix(ProfitsMatrix pm, Collection<Integer> chosenIndexes) {
+		this.profits = new double[pm.profits.length - 1][pm.profits[0].length];
 		for (int i = 0; i < profits.length; i++) {
 			for (int j = 0; j < profits[i].length; j++) {
 				if (chosenIndexes.contains(j)) {
@@ -43,16 +46,16 @@ public class ProfitsMatrix {
 		}
 	}
 
-	public int[] getCurrentColumn() {
+	public double[] getCurrentColumn() {
 		return profits[0];
 	}
 
-	public ProfitsMatrix getResidualProfitMatrix(Collection<Integer> chosenIndexes)
-			throws LastProfitColumnException {
+	public ProfitsMatrix getResidualProfitMatrix(Collection<Integer> chosenIndexes) {
 		return new ProfitsMatrix(this, chosenIndexes);
 	}
 
 	public boolean lastColumn() {
+		System.err.println("Boo");
 		return profits.length == 1;
 	}
 

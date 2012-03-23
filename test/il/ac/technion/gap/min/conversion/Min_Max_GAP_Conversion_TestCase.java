@@ -39,14 +39,14 @@ public class Min_Max_GAP_Conversion_TestCase {
 				{ 1, 2, 2, 1 }, 
 				{ 1, 3, 3, 2 },
 				{ 1, 3, 4, 3 } };
-		int[][] costs = new int[][] { 
+		double[][] costs = new double[][] { 
 				{ 3, 1, 5, 25 }, 
 				{ 1, 1, 15, 15 },
 				{ 5, 1, 25, 5 } };
 		testSolution(bins, sizes, costs,3);
 	}
 
-	private void testSolution(int[] bins, int[][] sizes, int[][] costs,int expected)
+	private void testSolution(int[] bins, int[][] sizes, double[][] costs,int expected)
 			throws GAP_Exception {
 		GAP_Alg minGap = inj.getInstance(GAP_Alg.class);
 		Bin[] answer = minGap.solve(bins, sizes, costs);
@@ -98,7 +98,7 @@ public class Min_Max_GAP_Conversion_TestCase {
 				{ 1, 2, 2, 1 }, 
 				{ 1, 3, 3, 2 },
 				{ 1, 3, 4, 3 } };
-		int[][] profits = new int[][] { 
+		double[][] profits = new double[][] { 
 				{ 3, 1, 5, 25 }, 
 				{ 1, 1, 15, 15 },
 				{ 5, 1, 25, 5 } };

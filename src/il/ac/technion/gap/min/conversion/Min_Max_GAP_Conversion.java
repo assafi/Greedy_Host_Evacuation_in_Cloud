@@ -36,15 +36,14 @@ public class Min_Max_GAP_Conversion implements GAP_Alg {
 	 * a GAP_Exception.
 	 */
 	@Override
-	public Bin[] solve(int[] binsCapacities, int[][] itemSizes, int[][] _itemCosts)
-			throws GAP_Exception {
+	public Bin[] solve(int[] binsCapacities, int[][] itemSizes, double[][] _itemCosts) {
 
 		int numItems = itemSizes[0].length;
 		
 		Bin[] bins = null;
 		Bin[] $ = createEmptyBins(binsCapacities);
 
-		int[][] itemProfits = costs2Profits(_itemCosts);
+		double[][] itemProfits = costs2Profits(_itemCosts);
 
 		do {
 			int[] bCapacities = updatedCapacities(bins, binsCapacities);
@@ -81,23 +80,23 @@ public class Min_Max_GAP_Conversion implements GAP_Alg {
 	}
 
 	@Requires("source.length == target.length")
-	private void mergeBins(Bin[] source, Bin[] target, int[][] itemsCosts) {
+	private void mergeBins(Bin[] source, Bin[] target, double[][] itemsCosts) {
 		for (int i = 0; i < target.length; i++) {
 			for (Item item : source[i].assignedItems()) {
 				System.out.println("target[i].id=" + target[i].id);
 				System.out.println("item.id=" + item.id);
-				int itemCost = itemsCosts[target[i].id][item.id];
+				double itemCost = itemsCosts[target[i].id][item.id];
 				target[i].assign(new AssignedItem(item.id, item.size, itemCost, target[i]));
 			}
 		}
 	}
 
-	private int[][] updateProfits(Bin[] bins, int[][] itemProfits) {
+	private double[][] updateProfits(Bin[] bins, double[][] itemProfits) {
 		if (bins == null) return itemProfits;
 		for (Bin bin: bins) {
 			for (Item item : bin.assignedItems()) {
 				for (int j = 0; j < itemProfits.length; j++) {
-					itemProfits[j][item.id] = 0; //Maybe should switch to -1
+					itemProfits[j][item.id] = 0.0; //Maybe should switch to -1
 				}
 			}
 		}
@@ -112,9 +111,9 @@ public class Min_Max_GAP_Conversion implements GAP_Alg {
 		return binsCapacities;
 	}
 
-	private static int[][] costs2Profits(int[][] costsMatrix) {
-		int max = max(costsMatrix);
-		int[][] profitMarix = new int[costsMatrix.length][costsMatrix[0].length];
+	private static double[][] costs2Profits(double[][] costsMatrix) {
+		double max = max(costsMatrix);
+		double[][] profitMarix = new double[costsMatrix.length][costsMatrix[0].length];
 		for (int i = 0; i < costsMatrix.length; i++) {
 			for (int j = 0; j < costsMatrix[i].length; j++) {
 				profitMarix[i][j] = max - costsMatrix[i][j];
@@ -123,8 +122,8 @@ public class Min_Max_GAP_Conversion implements GAP_Alg {
 		return profitMarix;
 	}
 
-	private static int max(int[][] matrix) {
-		int max = 0;
+	private static double max(double[][] matrix) {
+		double max = 0;
 
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix[i].length; j++) {
