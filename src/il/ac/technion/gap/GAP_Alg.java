@@ -15,8 +15,6 @@ public interface GAP_Alg {
 	 * @param _itemSizes
 	 * @param _itemProfits
 	 * @return
-	 * @throws GAP_Exception
 	 */
-	Bin[] solve(int[] binsCapacities, int[][] _itemSizes, int[][] _itemWeights)
-			throws GAP_Exception;
+	Bin[] solve(int[] binsCapacities, int[][] _itemSizes, double[][] _itemWeights);
 }

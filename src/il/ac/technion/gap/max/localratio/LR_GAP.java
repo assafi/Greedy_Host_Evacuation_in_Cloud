@@ -37,8 +37,7 @@ public class LR_GAP implements GAP_Alg {
 	@Override
 	@Requires({ "binsCapacities.length == itemSizes.length",
 			"itemSizes.length == itemProfits.length" })
-	public Bin[] solve(int[] binsCapacities, int[][] itemSizes, int[][] itemProfits)
-			throws GAP_Exception {
+	public Bin[] solve(int[] binsCapacities, int[][] itemSizes, double[][] itemProfits) {
 
 		if (binsCapacities.length == 0) {
 			return new Bin[0];
@@ -97,7 +96,7 @@ public class LR_GAP implements GAP_Alg {
 		return indexes;
 	}
 
-	private Collection<Item> prepareItems(int[] iSizes, int[] iProfits) {
+	private Collection<Item> prepareItems(int[] iSizes, double[] iProfits) {
 		Collection<Item> items = new ArrayList<Item>(iSizes.length);
 		for (int itemIdx = 0; itemIdx < iSizes.length; itemIdx++) {
 			items.add(new Item(itemIdx, iSizes[itemIdx], iProfits[itemIdx]));

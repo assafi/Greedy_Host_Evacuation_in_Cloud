@@ -3,49 +3,8 @@
     <id>1</id>
     <capacity>10</capacity>
   </bin>
-  <vms class="linked-list">
-    <VM>
-      <id>1</id>
-      <ram>1</ram>
-      <sla class="tableSLA">
-        <billingPeriod>1000</billingPeriod>
-        <totalDownTime>0</totalDownTime>
-        <compensationTable>
-          <entry>
-            <range>
-              <left>95.0</left>
-              <right>99.0</right>
-            </range>
-            <double>0.25</double>
-          </entry>
-          <entry>
-            <range>
-              <left>99.0</left>
-              <right>99.95</right>
-            </range>
-            <double>0.1</double>
-          </entry>
-          <entry>
-            <range>
-              <left>99.95</left>
-              <right>100.0</right>
-            </range>
-            <double>0.0</double>
-          </entry>
-          <entry>
-            <range>
-              <left>0.0</left>
-              <right>95.0</right>
-            </range>
-            <double>0.5</double>
-          </entry>
-        </compensationTable>
-        <contractAvailability>100.0</contractAvailability>
-      </sla>
-      <bootTimes/>
-    </VM>
-  </vms>
+  <vms class="linked-list"/>
   <active>false</active>
   <bootTime>1000</bootTime>
-  <activationCost>100</activationCost>
+  <activationCost>100.0</activationCost>
 </host>

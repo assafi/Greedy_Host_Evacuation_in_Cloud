@@ -10,6 +10,7 @@ import il.ac.technion.misc.Host;
 import il.ac.technion.misc.VM;
 import il.ac.technion.sla.SLABuilder;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class HostConversionTest {
 		xStream.toXML(h, new FileWriter(xmlFile));
 		
 		Host h2 = (Host)xStream.fromXML(new FileReader(xmlFile));
+		Assert.assertTrue(new File(xmlFile).exists());
 		Assert.assertEquals(h,h2);
 	}
 }

@@ -13,6 +13,7 @@ import il.ac.technion.misc.VM;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -26,13 +27,14 @@ public class RigidRecovery {
 		this.gap = gap;
 	}
 	
-	public RecoveryPlan solve(Collection<Host> hosts) {
+	public RecoveryPlan solve(List<Host> hosts) {
 		RecoveryPlan rp = new RecoveryPlan();
 		for (Host host : hosts) {
-			Collection<Host> filteredHosts = new ArrayList<Host>(hosts);
+			List<Host> filteredHosts = new ArrayList<Host>(hosts);
 			filteredHosts.remove(host);
-			rp.add(solveGAP(filteredHosts,host.vms()));
+//			rp.add(solveGAP(filteredHosts,host.vms()));
 		}
+		return null;
 	}
 
 	/**
@@ -40,18 +42,37 @@ public class RigidRecovery {
 	 * @param vms
 	 * @return
 	 */
-	private RecoveryPlan solveGAP(Collection<Host> filteredHosts, Collection<VM> vms) {
+	private RecoveryPlan solveGAP(List<Host> filteredHosts, List<VM> vms) {
 		int[] binsCapacities = prepareCapacities(filteredHosts);
 		int[][] itemSizes = prepareSizes(filteredHosts.size(), vms);
+		double[][] itemPrices = preparePrices(filteredHosts, vms);
+		gap.solve(binsCapacities, itemSizes, itemPrices);
 		return null;
 	}
 
-	private int[][] prepareSizes(int numBins, Collection<VM> vms) {
+	private double[][] preparePrices(List<Host> hosts, List<VM> vms) {
+		double[][] itemPrices = new double[hosts.size()][vms.size()];
+		for (int binIdx = 0; binIdx < hosts.size(); binIdx++) {
+			Host h = hosts.get(binIdx);
+			for (int vmIdx = 0; vmIdx < vms.size(); vmIdx++) {
+				VM vm = vms.get(vmIdx);
+				itemPrices[binIdx][vmIdx] = vm.cost(h);
+			}
+		}
+		return itemPrices;
+	}
+
+	private int[][] prepareSizes(int numBins, List<VM> vms) {
 		int[][] itemSizes = new int[numBins][vms.size()];
-		return null;
+		for (int binIdx = 0; binIdx < numBins; binIdx++) {
+			for (int vmIdx = 0; vmIdx < vms.size(); vmIdx++) {
+				itemSizes[binIdx][vmIdx] = vms.get(vmIdx).ram;
+			}
+		}
+		return itemSizes;
 	}
 
-	private int[] prepareCapacities(Collection<Host> filteredHosts) {
+	private int[] prepareCapacities(List<Host> filteredHosts) {
 		int[] binsCapacities = new int[filteredHosts.size()];
 		int i = 0;
 		Iterator<Host> iter = filteredHosts.iterator();
