@@ -4,9 +4,9 @@
  * Author: Assaf Israel, 2012
  * Created: 12/03/2012
  */
-package il.ac.technion.misc;
+package il.ac.technion.datacenter;
 
-import il.ac.technion.sla.SLA;
+import il.ac.technion.datacenter.sla.SLA;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,5 +49,15 @@ public class VM {
 		Period vmBootTime = bootTimes.containsKey(h) ? bootTimes.get(h) : new Period();
 		Period estimatedTotalBootTime = hostBootTime.plus(vmBootTime);
 		return sla.compensation(estimatedTotalBootTime) * contractCost;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof VM))
+			return false;
+		VM vm = (VM)obj;
+		return id == vm.id && ram == vm.ram &&
+			contractCost == vm.contractCost &&
+			sla.equals(vm.sla);
 	}
 }

@@ -3,7 +3,8 @@
  * 
  * Author: Assaf Israel, 2012
  */
-package il.ac.technion.misc;
+package il.ac.technion.knapsack;
+
 
 import java.util.ArrayList;
 import java.util.Collection;

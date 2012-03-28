@@ -9,11 +9,11 @@ package il.ac.technion.semi_rigid;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import il.ac.technion.datacenter.Host;
+import il.ac.technion.datacenter.VM;
+import il.ac.technion.datacenter.sla.SLABuilder;
 import il.ac.technion.gap.guice.ProductionModule;
-import il.ac.technion.misc.Host;
-import il.ac.technion.misc.VM;
 import il.ac.technion.rigid.RecoveryPlan;
-import il.ac.technion.sla.SLABuilder;
 
 import java.util.ArrayList;
 import java.util.List;

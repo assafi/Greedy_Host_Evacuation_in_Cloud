@@ -4,7 +4,7 @@
  * Author: Assaf Israel, 2012
  * Created: 17/03/2012
  */
-package il.ac.technion.sla;
+package il.ac.technion.datacenter.sla;
 
 import il.ac.technion.misc.HashCodeUtil;
 

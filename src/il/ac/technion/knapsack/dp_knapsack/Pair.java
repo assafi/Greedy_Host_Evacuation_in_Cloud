@@ -6,7 +6,7 @@
  */
 package il.ac.technion.knapsack.dp_knapsack;
 
-import il.ac.technion.misc.Item;
+import il.ac.technion.knapsack.Item;
 
 import java.util.HashSet;
 import java.util.Set;

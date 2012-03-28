@@ -4,7 +4,7 @@
  * Author: Assaf Israel, 2012
  * Created: 12/03/2012
  */
-package il.ac.technion.misc;
+package il.ac.technion.knapsack;
 
 
 public class Item {

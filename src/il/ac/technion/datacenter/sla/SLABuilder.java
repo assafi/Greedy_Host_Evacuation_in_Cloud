@@ -4,7 +4,7 @@
  * Author: Assaf Israel, 2012
  * Created: 22/03/2012
  */
-package il.ac.technion.sla;
+package il.ac.technion.datacenter.sla;
 
 import java.util.HashMap;
 import java.util.Map;

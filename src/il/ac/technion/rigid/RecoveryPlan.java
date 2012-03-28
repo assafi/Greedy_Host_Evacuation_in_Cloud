@@ -6,10 +6,10 @@
  */
 package il.ac.technion.rigid;
 
-import il.ac.technion.misc.Bin;
-import il.ac.technion.misc.Host;
-import il.ac.technion.misc.Item;
-import il.ac.technion.misc.VM;
+import il.ac.technion.datacenter.Host;
+import il.ac.technion.datacenter.VM;
+import il.ac.technion.knapsack.Bin;
+import il.ac.technion.knapsack.Item;
 
 import java.util.HashMap;
 import java.util.LinkedList;

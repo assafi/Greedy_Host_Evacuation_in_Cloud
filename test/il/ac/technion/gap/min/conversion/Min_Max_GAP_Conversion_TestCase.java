@@ -9,8 +9,8 @@ package il.ac.technion.gap.min.conversion;
 import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.gap.GAP_Exception;
 import il.ac.technion.gap.guice.ProductionModule;
-import il.ac.technion.misc.Bin;
-import il.ac.technion.misc.Item;
+import il.ac.technion.knapsack.Bin;
+import il.ac.technion.knapsack.Item;
 
 import java.util.LinkedList;
 import java.util.List;

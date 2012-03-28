@@ -6,7 +6,7 @@
  */
 package il.ac.technion.semi_rigid;
 
-import il.ac.technion.misc.Host;
+import il.ac.technion.datacenter.Host;
 import il.ac.technion.rigid.RecoveryPlan;
 import il.ac.technion.rigid.RigidRecovery;
 

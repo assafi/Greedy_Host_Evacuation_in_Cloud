@@ -4,7 +4,7 @@
  * Author: Assaf Israel, 2012
  * Created: 12/03/2012
  */
-package il.ac.technion.sla;
+package il.ac.technion.datacenter.sla;
 
 import il.ac.technion.misc.PeriodCoverter;
 
@@ -124,5 +124,16 @@ public class TableSLA extends SLA {
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TableSLA))
+			return false;
+		TableSLA sla = (TableSLA)obj;
+		if (!sla.compensationTable.equals(this.compensationTable)
+				|| sla.contractAvailability != this.contractAvailability)
+			return false;
+		return true;
 	}
 }

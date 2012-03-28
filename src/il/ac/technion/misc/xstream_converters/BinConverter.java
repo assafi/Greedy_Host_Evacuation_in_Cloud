@@ -4,9 +4,9 @@
  * Author: Assaf Israel, 2012
  * Created: 17/03/2012
  */
-package il.ac.technion.misc.converters;
+package il.ac.technion.misc.xstream_converters;
 
-import il.ac.technion.misc.Bin;
+import il.ac.technion.knapsack.Bin;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;

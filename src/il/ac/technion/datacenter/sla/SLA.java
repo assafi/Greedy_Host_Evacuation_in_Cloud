@@ -4,15 +4,13 @@
  * Author: Assaf Israel, 2012
  * Created: 12/03/2012
  */
-package il.ac.technion.sla;
+package il.ac.technion.datacenter.sla;
 
 import il.ac.technion.misc.PeriodCoverter;
-import il.ac.technion.misc.converters.SimplePeriodConverter;
 
 import org.joda.time.Period;
 
 import com.google.java.contract.Ensures;
-import com.thoughtworks.xstream.annotations.XStreamConverter;
 
 /**
  *	Service License Agreement of Cloud Providers.
@@ -21,10 +19,10 @@ import com.thoughtworks.xstream.annotations.XStreamConverter;
  */
 public abstract class SLA {
 
-	@XStreamConverter(SimplePeriodConverter.class)
+//	@XStreamConverter(SimplePeriodConverter.class)
 	final public Period billingPeriod;
 	
-	@XStreamConverter(SimplePeriodConverter.class)
+//	@XStreamConverter(SimplePeriodConverter.class)
 	private Period totalDownTime;
 	
 	/**

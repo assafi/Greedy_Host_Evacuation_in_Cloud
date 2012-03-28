@@ -6,10 +6,10 @@
  */
 package il.ac.technion.rigid;
 
+import il.ac.technion.datacenter.Host;
+import il.ac.technion.datacenter.VM;
 import il.ac.technion.gap.GAP_Alg;
-import il.ac.technion.misc.Bin;
-import il.ac.technion.misc.Host;
-import il.ac.technion.misc.VM;
+import il.ac.technion.knapsack.Bin;
 
 import java.util.ArrayList;
 import java.util.Iterator;

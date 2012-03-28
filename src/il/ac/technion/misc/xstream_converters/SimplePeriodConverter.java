@@ -4,7 +4,9 @@
  * Author: Assaf Israel, 2012
  * Created: 22/03/2012
  */
-package il.ac.technion.misc.converters;
+package il.ac.technion.misc.xstream_converters;
+
+import il.ac.technion.misc.PeriodCoverter;
 
 import org.joda.time.Period;
 
@@ -25,12 +27,12 @@ public class SimplePeriodConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		Period bootTime = (Period)source;
-		writer.setValue(Integer.toString(bootTime.getMillis()));
+		writer.setValue(Long.toString(PeriodCoverter.toSeconds(bootTime)));
 	}
 
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		return Period.millis(Integer.valueOf(reader.getValue()));
+		return Period.seconds((Integer.valueOf(reader.getValue())));
 	}
 }

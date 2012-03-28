@@ -7,9 +7,9 @@
 package il.ac.technion.gap.min.conversion;
 
 import il.ac.technion.gap.GAP_Alg;
-import il.ac.technion.misc.AssignedItem;
-import il.ac.technion.misc.Bin;
-import il.ac.technion.misc.Item;
+import il.ac.technion.knapsack.AssignedItem;
+import il.ac.technion.knapsack.Bin;
+import il.ac.technion.knapsack.Item;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;

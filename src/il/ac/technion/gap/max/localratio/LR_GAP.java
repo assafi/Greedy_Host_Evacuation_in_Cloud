@@ -7,10 +7,10 @@
 package il.ac.technion.gap.max.localratio;
 
 import il.ac.technion.gap.GAP_Alg;
+import il.ac.technion.knapsack.Bin;
+import il.ac.technion.knapsack.Item;
 import il.ac.technion.knapsack.KnapsackAlg;
 import il.ac.technion.knapsack.dp_knapsack.Pair;
-import il.ac.technion.misc.Bin;
-import il.ac.technion.misc.Item;
 
 import java.util.ArrayList;
 import java.util.Collection;

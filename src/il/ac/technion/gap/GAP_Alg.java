@@ -6,7 +6,7 @@
  */
 package il.ac.technion.gap;
 
-import il.ac.technion.misc.Bin;
+import il.ac.technion.knapsack.Bin;
 
 public interface GAP_Alg {
 	
