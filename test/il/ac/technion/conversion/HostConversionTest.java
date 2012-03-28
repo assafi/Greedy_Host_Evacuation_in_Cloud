@@ -31,7 +31,7 @@ public class HostConversionTest {
 	@Test
 	public void testConversion() throws IOException {
 		Host h = new Host(1,10,100,Period.millis(1000));
-		h.assign(new VM(1,1,new SLABuilder(Period.millis(1000)).appEngineSLA()));		
+		h.assign(new VM(1,1,1.0,new SLABuilder(Period.millis(1000)).appEngineSLA()));		
 		
 		XStream xStream = new XStream(new DomDriver());
 		xStream.autodetectAnnotations(true);

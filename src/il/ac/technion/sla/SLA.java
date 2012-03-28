@@ -6,6 +6,7 @@
  */
 package il.ac.technion.sla;
 
+import il.ac.technion.misc.PeriodCoverter;
 import il.ac.technion.misc.converters.SimplePeriodConverter;
 
 import org.joda.time.Period;
@@ -59,7 +60,8 @@ public abstract class SLA {
 		"result >= 0.0"
 	})
 	public double availability() {
-		return (double)billingPeriod.minus(totalDownTime).getMillis() / billingPeriod.getMillis();
+		return ((double)PeriodCoverter.toMillis(billingPeriod.minus(totalDownTime)) / 
+		PeriodCoverter.toMillis(billingPeriod)) * 100.0;
 	}
 	
 	/**
@@ -99,8 +101,8 @@ public abstract class SLA {
 	
 	@SuppressWarnings("unused")
 	private boolean zeroCostCheck(Period estimatedDownTime, double result) {
-		if (totalDownTime.plus(estimatedDownTime).getMillis() <= 
-					(100.0-availabilityContract())*billingPeriod.getMillis()) 
+		if (PeriodCoverter.toMillis(totalDownTime.plus(estimatedDownTime)) < 
+					(100.0-availabilityContract())*PeriodCoverter.toMillis(billingPeriod)) 
 			return result == 0.0;
 		return true;
 	}

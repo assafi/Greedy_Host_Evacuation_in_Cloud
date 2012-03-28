@@ -4,16 +4,13 @@
  * Author: Assaf Israel, 2012
  * Created: 12/03/2012
  */
-package il.ac.technion;
+package il.ac.technion.rigid;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ 
-il.ac.technion.gap.AllTests.class,
-il.ac.technion.knapsack.dp_knapsack.AllTests.class,
-il.ac.technion.conversion.AllTests.class,
-il.ac.technion.rigid.AllTests.class,
-il.ac.technion.semi_rigid.AllTests.class,})
+il.ac.technion.rigid.RecoveryPlanTest.class,
+il.ac.technion.rigid.RigidRecoveryTest.class,})
 public class AllTests {}

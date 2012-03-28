@@ -7,11 +7,11 @@
 package il.ac.technion.rigid;
 
 import il.ac.technion.gap.GAP_Alg;
+import il.ac.technion.misc.Bin;
 import il.ac.technion.misc.Host;
 import il.ac.technion.misc.VM;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,26 +28,26 @@ public class RigidRecovery {
 	}
 	
 	public RecoveryPlan solve(List<Host> hosts) {
-		RecoveryPlan rp = new RecoveryPlan();
+		RecoveryPlan rp = new RecoveryPlan(hosts);
+		int vmCount = 0;
 		for (Host host : hosts) {
 			List<Host> filteredHosts = new ArrayList<Host>(hosts);
 			filteredHosts.remove(host);
-//			rp.add(solveGAP(filteredHosts,host.vms()));
+			List<VM> recoveredVMs = host.vms();
+			vmCount += recoveredVMs.size();
+			rp.add(solveGAP(filteredHosts,recoveredVMs),filteredHosts,recoveredVMs);
 		}
-		return null;
+		if (rp.recoveredVMsCount() == vmCount) {
+			rp.full();
+		}
+		return rp;
 	}
 
-	/**
-	 * @param filteredHosts
-	 * @param vms
-	 * @return
-	 */
-	private RecoveryPlan solveGAP(List<Host> filteredHosts, List<VM> vms) {
+	private Bin[] solveGAP(List<Host> filteredHosts, List<VM> vms) {
 		int[] binsCapacities = prepareCapacities(filteredHosts);
 		int[][] itemSizes = prepareSizes(filteredHosts.size(), vms);
 		double[][] itemPrices = preparePrices(filteredHosts, vms);
-		gap.solve(binsCapacities, itemSizes, itemPrices);
-		return null;
+		return gap.solve(binsCapacities, itemSizes, itemPrices);
 	}
 
 	private double[][] preparePrices(List<Host> hosts, List<VM> vms) {

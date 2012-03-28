@@ -19,17 +19,20 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 public class VM {
 	public final int id;
 	public final int ram;
+	public final double contractCost; 
 	public final SLA sla;
+	
 	private Map<Host, Period> bootTimes = new HashMap<Host, Period>(); 
 	
-	public VM(int id, int ram, SLA sla) {
+	public VM(int id, int ram, double contractCost, SLA sla) {
 		this.id = id;
 		this.ram = ram;
+		this.contractCost = contractCost;
 		this.sla = sla;
 	}
 	
-	public VM(int id, int ram, SLA sla, Map<Host, Period> bootTimes) {
-		this(id,ram,sla);
+	public VM(int id, int ram, double contractCost, SLA sla, Map<Host, Period> bootTimes) {
+		this(id,ram,contractCost,sla);
 		this.bootTimes = bootTimes;
 	}
 	
@@ -42,9 +45,9 @@ public class VM {
 	}
 	
 	public double cost(Host h) {
-		if (bootTimes.containsKey(h)) {
-			return sla.compensation(bootTimes.get(h));
-		} 
-		return sla.compensation();
+		Period hostBootTime = h.bootTime();
+		Period vmBootTime = bootTimes.containsKey(h) ? bootTimes.get(h) : new Period();
+		Period estimatedTotalBootTime = hostBootTime.plus(vmBootTime);
+		return sla.compensation(estimatedTotalBootTime) * contractCost;
 	}
 }

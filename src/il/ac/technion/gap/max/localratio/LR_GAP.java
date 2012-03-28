@@ -7,7 +7,6 @@
 package il.ac.technion.gap.max.localratio;
 
 import il.ac.technion.gap.GAP_Alg;
-import il.ac.technion.gap.GAP_Exception;
 import il.ac.technion.knapsack.KnapsackAlg;
 import il.ac.technion.knapsack.dp_knapsack.Pair;
 import il.ac.technion.misc.Bin;
@@ -39,13 +38,17 @@ public class LR_GAP implements GAP_Alg {
 			"itemSizes.length == itemProfits.length" })
 	public Bin[] solve(int[] binsCapacities, int[][] itemSizes, double[][] itemProfits) {
 
-		if (binsCapacities.length == 0) {
-			return new Bin[0];
+		Bin[] bins = new Bin[binsCapacities.length];
+		for (int i = 0; i < bins.length; i++) {
+			bins[i] = new Bin(i,binsCapacities[i]);
+		}
+		
+		if (binsCapacities.length == 0 || itemSizes[0].length == 0) {
+			return bins;
 		}
 
 		int numItems = itemSizes[0].length;
 		int[] itemsAssignments = initItemsAssignments(numItems);
-		
 		
 		ProfitsMatrix pm = new ProfitsMatrix(itemProfits);
 
@@ -61,16 +64,12 @@ public class LR_GAP implements GAP_Alg {
 			}
 		}
 		
-		Bin[] bins = new Bin[binsCapacities.length];
-		for (int i = 0; i < bins.length; i++) {
-			bins[i] = new Bin(i,binsCapacities[i]);
-		}
-		
 		for (int itemIdx = 0; itemIdx < itemsAssignments.length; itemIdx++) {
 			if (unassigned(itemsAssignments[itemIdx])) continue;
 			int binIdx = itemsAssignments[itemIdx];
 			bins[binIdx].assign(new Item(itemIdx,itemSizes[binIdx][itemIdx], itemProfits[binIdx][itemIdx]));
 		}
+		
 		return bins;
 	}
 

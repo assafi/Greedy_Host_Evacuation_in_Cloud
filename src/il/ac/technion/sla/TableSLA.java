@@ -6,11 +6,14 @@
  */
 package il.ac.technion.sla;
 
+import il.ac.technion.misc.PeriodCoverter;
+
 import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.Period;
 
+import com.google.java.contract.Requires;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
@@ -23,15 +26,19 @@ public class TableSLA extends SLA {
 	private Map<Range, Double> compensationTable;
 	private double contractAvailability;
 
+	@Requires({
+		"billingPeriod != null", 
+		"compensationTable != null"
+	})
 	public TableSLA(Period billingPeriod, Map<Range, Double> compensationTable) {
 		super(billingPeriod);
-		if (billingPeriod.getMillis() == 0)
+		if (billingPeriod.equals(Period.ZERO))
 			throw new IllegalArgumentException(
 					"SLA definition must have a non-empty billing period");
 		if (!verifyTable(compensationTable))
 			throw new IllegalArgumentException("Invalid compensationTable");
 		this.compensationTable = compensationTable;
-		this.contractAvailability = findRange(100.0, compensationTable.keySet()).right;
+		this.contractAvailability = findRange(100.0, compensationTable.keySet()).left;
 	}
 
 	@Override
@@ -40,11 +47,24 @@ public class TableSLA extends SLA {
 	}
 
 	@Override
+	@Requires("estimatedDownTime != null")
 	public double compensation(Period estimatedDownTime) {
-		double availability = super.availability()
-				- (double) estimatedDownTime.getMillis() / billingPeriod.getMillis();
-		Range r = findRange(availability, compensationTable.keySet());
+		double availability = super.availability();
+		availability -= ((double) PeriodCoverter.toSeconds(estimatedDownTime) / PeriodCoverter.toSeconds(billingPeriod)) * 100.0;
+		Range r = null;
+		if (availability != 0.0)
+			r = findRange(availability);
+		else 
+			r = getLowestRange();
 		return compensationTable.get(r);
+	}
+
+	private Range getLowestRange() {
+		return getLowestRange(compensationTable.keySet());
+	}
+
+	private Range findRange(double availability) {
+		return findRange(availability,compensationTable.keySet());
 	}
 
 	@Override
@@ -88,6 +108,15 @@ public class TableSLA extends SLA {
 		return count;
 	}
 
+	public Range getLowestRange(Set<Range> ranges) {
+		Range $ = null;
+		for (Range range : ranges) {
+			if ($ == null || $.left > range.left)
+				$ = range;
+		}
+		return $;
+	}
+	
 	private Range findRange(double value, Set<Range> ranges) {
 		for (Range range : ranges) {
 			if (range.inRange(value)) {

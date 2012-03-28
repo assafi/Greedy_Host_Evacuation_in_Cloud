@@ -13,7 +13,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 /**
- *	Represents a left-closed numeric range [a,b). 
+ *	Represents a left-closed numeric range (a,b]. 
  */
 @XStreamAlias("range")
 public class Range {
@@ -40,7 +40,7 @@ public class Range {
 	
 	@Override
 	public String toString() {
-		return "[" + left + "," + right + ")";
+		return "(" + left + "," + right + "]";
 	}
 	
 	@Override
