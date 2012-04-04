@@ -7,6 +7,7 @@
 package il.ac.technion.semi_rigid;
 
 import il.ac.technion.datacenter.Host;
+import il.ac.technion.datacenter.PhysicalAffinity;
 import il.ac.technion.rigid.RecoveryPlan;
 import il.ac.technion.rigid.RigidRecovery;
 
@@ -24,10 +25,11 @@ public class SemiRigidLSRecovery {
 		this.rr = rr;
 	}
 	
-	public RecoveryPlan solve(List<Host> hosts) {
+	public RecoveryPlan affinityRecovery(List<PhysicalAffinity> pal) {
+		List<Host> hosts = PhysicalAffinity.extractHosts(pal);
 		List<Host> inactiveHosts = sieveInactive(hosts);
 		
-		RecoveryPlan $ = rr.solve(hosts);
+		RecoveryPlan $ = rr.affinityRecovery(pal);
 		double $cost = cost($,hosts);
 		boolean stop;
 		
@@ -36,7 +38,7 @@ public class SemiRigidLSRecovery {
 			Host nextActive = null;
 			for (Host host : inactiveHosts) {
 				host.activate();
-				RecoveryPlan tempRP = rr.solve(hosts);
+				RecoveryPlan tempRP = rr.affinityRecovery(pal);
 				double tempCost = tempRP.cost();
 				if (tempCost < $cost) {
 					stop = false;
@@ -44,7 +46,37 @@ public class SemiRigidLSRecovery {
 					$cost = tempCost;
 					$ = tempRP;
 				}
-				host.diactivate();
+				host.deactivate();
+			}
+			if (!stop) {
+				nextActive.activate();
+				inactiveHosts.remove(nextActive);
+			}
+		} while (!stop);
+		return $;
+	}
+	
+	public RecoveryPlan hostsRecovery(List<Host> hosts) {
+		List<Host> inactiveHosts = sieveInactive(hosts);
+		
+		RecoveryPlan $ = rr.hostsRecovery(hosts);
+		double $cost = cost($,hosts);
+		boolean stop;
+		
+		do {
+			stop = true;
+			Host nextActive = null;
+			for (Host host : inactiveHosts) {
+				host.activate();
+				RecoveryPlan tempRP = rr.hostsRecovery(hosts);
+				double tempCost = tempRP.cost();
+				if (tempCost < $cost) {
+					stop = false;
+					nextActive = host;
+					$cost = tempCost;
+					$ = tempRP;
+				}
+				host.deactivate();
 			}
 			if (!stop) {
 				nextActive.activate();

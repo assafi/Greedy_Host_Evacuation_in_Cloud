@@ -26,17 +26,19 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 @XStreamAlias("host")
 public class Host {
 
+	private static final String delim = System.getProperty("line.separator");
 	@XStreamConverter(BinConverter.class)
 	private Bin bin;
-	private List<VM> vms = new LinkedList<VM>(); 
+	private List<VM> vms = new LinkedList<VM>();
 	private boolean active = false;
-	
+	private PhysicalAffinity affinity = null;
+
 	@XStreamConverter(SimplePeriodConverter.class)
 	private final Period bootTime;
-	
+
 	@XStreamAlias("activationCost")
 	final public double activationCost;
-	
+
 	@XStreamOmitField
 	private int fHashCode = 0;
 
@@ -46,13 +48,13 @@ public class Host {
 		this.bootTime = bootTime;
 		this.active = (activationCost == 0.0);
 	}
-	
+
 	public Host(int id, int ram, double activationCost, Period bootTime) {
-		this(new Bin(id, ram),activationCost,bootTime);
+		this(new Bin(id, ram), activationCost, bootTime);
 	}
-	
+
 	public Host(Host h) {
-		this(h.bin,h.activationCost,h.bootTime);
+		this(h.bin, h.activationCost, h.bootTime);
 	}
 
 	@Override
@@ -66,52 +68,56 @@ public class Host {
 	}
 
 	public Period bootTime() {
-		if (active) 
+		if (active)
 			return new Period();
 		return bootTime;
 	}
-	
+
 	public boolean isActive() {
 		return active;
 	}
-	
+
 	public void activate() {
 		this.active = true;
 	}
-	
-	public void diactivate() {
+
+	public void deactivate() {
 		this.active = false;
 	}
-	
+
 	public double cost() {
 		return (active ? activationCost : 0.0);
 	}
-	
+
 	public boolean assign(VM vm) {
-		Item i = new Item(vm.id,vm.ram,vm.cost(this));
+		Item i = new Item(vm.id, vm.ram, vm.cost(this));
 		return bin.assign(i) && vms.add(vm);
 	}
-	
+
 	public boolean unassign(VM vm) {
-		Item i = new Item(vm.id,vm.ram,vm.cost(this));
+		Item i = new Item(vm.id, vm.ram, vm.cost(this));
 		return vms.remove(vm) && bin.unassign(i);
 	}
-	
+
 	public List<VM> vms() {
 		return new ArrayList<VM>(vms);
 	}
-	
+
 	public Collection<Item> items() {
 		return bin.assignedItems();
 	}
-	
+
 	public int freeCapacity() {
 		return bin.remainingCapacity();
 	}
-	
+
+	public int usedCapacity() {
+		return bin.capacity - freeCapacity();
+	}
+
 	@Override
 	public int hashCode() {
-		if (fHashCode  == 0) {
+		if (fHashCode == 0) {
 			int result = HashCodeUtil.SEED;
 			result = HashCodeUtil.hash(result, bin);
 			result = HashCodeUtil.hash(result, activationCost);
@@ -120,8 +126,41 @@ public class Host {
 		}
 		return fHashCode;
 	}
-	
+
 	public int id() {
 		return bin.id;
+	}
+	
+	public boolean join(PhysicalAffinity a) {
+		if (null != affinity) {
+			affinity.leave(this);
+		}
+		return a.join(this);
+	}
+	
+	public boolean leave() {
+		if (null != affinity) {
+			return affinity.leave(this);
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Host #" + id() + " [ Total: " + bin.capacity + " | Used: "
+				+ usedCapacity() + " | Free: " + freeCapacity() + " ] - ");
+		if (!active)
+			sb.append("in");
+		sb.append("active ");
+		if (vms.isEmpty()) {
+			sb.append("and empty");
+			return sb.toString();
+		}
+		sb.append(delim + "VMs: ");
+		for (VM vm : vms) {
+			sb.append(vm + ", ");
+		}
+		return sb.toString();
 	}
 }

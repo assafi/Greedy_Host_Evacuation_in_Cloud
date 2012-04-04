@@ -10,6 +10,7 @@ package il.ac.technion.semi_rigid;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import il.ac.technion.datacenter.Host;
+import il.ac.technion.datacenter.PhysicalAffinity;
 import il.ac.technion.datacenter.VM;
 import il.ac.technion.datacenter.sla.SLABuilder;
 import il.ac.technion.gap.guice.ProductionModule;
@@ -61,9 +62,9 @@ public class SemiRigidRecoveryTest {
 		hosts.add(h1);
 		hosts.add(h2);
 		hosts.add(h3);
-		h3.diactivate();
+		h3.deactivate();
 		
-		RecoveryPlan rp = srr.solve(hosts);
+		RecoveryPlan rp = srr.hostsRecovery(hosts);
 		System.out.println(rp);
 		assertTrue(rp.getMap().get(h3).contains(vm1));
 		assertTrue(rp.getMap().get(h3).contains(vm2));
@@ -94,9 +95,9 @@ public class SemiRigidRecoveryTest {
 		hosts.add(h1);
 		hosts.add(h2);
 		hosts.add(h3);
-		h3.diactivate();
+		h3.deactivate();
 		
-		RecoveryPlan rp = srr.solve(hosts);
+		RecoveryPlan rp = srr.hostsRecovery(hosts);
 		System.out.println(rp);
 		assertTrue(rp.getMap().get(h3).contains(vm1));
 		assertTrue(rp.getMap().get(h3).contains(vm2));
@@ -125,18 +126,64 @@ public class SemiRigidRecoveryTest {
 		vm1.addBootTime(h2, Period.minutes(200));
 		vm1.addBootTime(h3, Period.minutes(200));
 		h0.assign(vm1);
-		h1.diactivate();
+		
+		h1.deactivate();
 		
 		hosts.add(h0);
 		hosts.add(h1);
 		hosts.add(h2);
 		hosts.add(h3);
-		h2.diactivate();
-		h3.diactivate();
+		h2.deactivate();
+		h3.deactivate();
 		
-		RecoveryPlan rp = srr.solve(hosts);
+		RecoveryPlan rp = srr.hostsRecovery(hosts);
 		System.out.println(rp);
 		assertTrue(2.0 == rp.cost());
 		assertTrue(h3.isActive());
+	}
+	
+	@Test
+	public void testComplexAffinityRecovery() {
+		List<PhysicalAffinity> al = new ArrayList<PhysicalAffinity>(3);
+
+		for (int i = 0; i < 3; i++) {
+			al.add(new PhysicalAffinity("test-affinity",i));
+		}
+				
+		Host h0 = new Host(0, 512, 0.0, Period.minutes(3));
+		Host h1 = new Host(1, 512, 0.0, Period.minutes(3));
+		Host h2 = new Host(2, 512, 10.0, Period.minutes(100));
+		Host h3 = new Host(3, 256, 2.0, Period.minutes(100));
+		
+		VM vm0 = new VM(0, 256, 70.0, new SLABuilder().appEngineSLA());
+		vm0.addBootTime(h0, Period.hours(1));
+		vm0.addBootTime(h1, Period.days(3));
+		vm0.addBootTime(h2, Period.minutes(200));
+		vm0.addBootTime(h3, Period.minutes(200));
+		h0.assign(vm0);
+				
+		VM vm1 = new VM(1, 256, 70.0, new SLABuilder().appEngineSLA());
+		vm1.addBootTime(h0, Period.days(3));
+		vm1.addBootTime(h1, Period.hours(1));
+		vm1.addBootTime(h2, Period.minutes(200));
+		vm1.addBootTime(h3, Period.minutes(200));
+		h0.assign(vm1);
+		
+		h0.activate();
+		h0.join(al.get(0));
+		
+		h1.deactivate();
+		h1.join(al.get(0));
+		
+		h2.deactivate();
+		h2.join(al.get(1));
+		
+		h3.deactivate();
+		h3.join(al.get(1));
+		
+		RecoveryPlan rp = srr.affinityRecovery(al);
+		System.out.println(rp);
+		assertTrue(rp.getMap().get(h3).contains(vm0));
+		assertTrue(rp.getMap().get(h2).contains(vm1));
 	}
 }

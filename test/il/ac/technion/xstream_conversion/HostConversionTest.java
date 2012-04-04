@@ -10,36 +10,15 @@ import il.ac.technion.datacenter.Host;
 import il.ac.technion.datacenter.VM;
 import il.ac.technion.datacenter.sla.SLABuilder;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import junit.framework.Assert;
-
 import org.joda.time.Period;
-import org.junit.Test;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 
-public class HostConversionTest {
-	
-	private final static String xmlFile = "test-resources//host.xml";
+public class HostConversionTest extends ConversionTest {
 
-	@Test
-	public void testConversion() throws IOException {
+	@Override
+	protected Object getSubject() {
 		Host h = new Host(1,10,100,Period.millis(1000));
-		h.assign(new VM(1,1,1.0,new SLABuilder(Period.millis(1000)).appEngineSLA()));		
-		
-		XStream xStream = new XStream(new DomDriver());
-		xStream.autodetectAnnotations(true);
-		
-		xStream.toXML(h, new FileWriter(xmlFile));
-		
-		Host h2 = (Host)xStream.fromXML(new FileReader(xmlFile));
-		Assert.assertTrue(new File(xmlFile).exists());
-		Assert.assertEquals(h,h2);
+		h.assign(new VM(1,1,1.0,new SLABuilder(Period.millis(1000)).appEngineSLA()));
+		return h;
 	}
 }

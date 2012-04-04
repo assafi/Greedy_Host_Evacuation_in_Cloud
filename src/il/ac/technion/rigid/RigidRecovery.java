@@ -7,6 +7,7 @@
 package il.ac.technion.rigid;
 
 import il.ac.technion.datacenter.Host;
+import il.ac.technion.datacenter.PhysicalAffinity;
 import il.ac.technion.datacenter.VM;
 import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.knapsack.Bin;
@@ -27,7 +28,24 @@ public class RigidRecovery {
 		this.gap = gap;
 	}
 	
-	public RecoveryPlan solve(List<Host> hosts) {
+	public RecoveryPlan affinityRecovery(List<PhysicalAffinity> paList) {
+		List<Host> hosts = PhysicalAffinity.extractHosts(paList);
+		RecoveryPlan rp = new RecoveryPlan(hosts);
+		int vmCount = 0;
+		for (PhysicalAffinity pa : paList) {
+			List<Host> filteredHosts = new ArrayList<Host>(hosts);
+			filteredHosts.removeAll(pa.getHosts());
+			List<VM> recoveredVMs = pa.getVMs();
+			vmCount += recoveredVMs.size();
+			rp.add(solveGAP(filteredHosts,recoveredVMs),filteredHosts,recoveredVMs);
+		}
+		if (rp.recoveredVMsCount() == vmCount) {
+			rp.full();
+		}
+		return rp;
+	}
+	
+	public RecoveryPlan hostsRecovery(List<Host> hosts) {
 		RecoveryPlan rp = new RecoveryPlan(hosts);
 		int vmCount = 0;
 		for (Host host : hosts) {

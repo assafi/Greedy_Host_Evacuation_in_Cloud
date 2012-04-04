@@ -14,5 +14,6 @@ import org.junit.runners.Suite;
 il.ac.technion.xstream_conversion.HostConversionTest.class,
 il.ac.technion.xstream_conversion.SLAConversionTest.class,
 il.ac.technion.xstream_conversion.VMConversionTest.class,
+il.ac.technion.xstream_conversion.PlacementConversionTest.class,
 })
 public class AllTests {}

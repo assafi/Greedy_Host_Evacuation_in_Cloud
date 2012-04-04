@@ -7,6 +7,7 @@
 package il.ac.technion.datacenter;
 
 import il.ac.technion.datacenter.sla.SLA;
+import il.ac.technion.misc.HashCodeUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
 import org.joda.time.Period;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("VM")
 public class VM {
@@ -21,6 +23,9 @@ public class VM {
 	public final int ram;
 	public final double contractCost; 
 	public final SLA sla;
+	
+	@XStreamOmitField
+	private int fHashCode = 0;
 	
 	private Map<Host, Period> bootTimes = new HashMap<Host, Period>(); 
 	
@@ -59,5 +64,24 @@ public class VM {
 		return id == vm.id && ram == vm.ram &&
 			contractCost == vm.contractCost &&
 			sla.equals(vm.sla);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (fHashCode  == 0) {
+			int result = HashCodeUtil.SEED;
+			result = HashCodeUtil.hash(result, id);
+			result = HashCodeUtil.hash(result, ram);
+			result = HashCodeUtil.hash(result, contractCost);
+			result = HashCodeUtil.hash(result, sla);
+			result = HashCodeUtil.hash(result, bootTimes);
+			fHashCode = result;
+		}
+		return fHashCode;
+	}
+	
+	@Override
+	public String toString() {
+		return "VM#" + id + " [" + ram + "]";
 	}
 }
