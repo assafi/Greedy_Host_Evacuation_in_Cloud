@@ -24,10 +24,16 @@ public class VM {
 	public final double contractCost; 
 	public final SLA sla;
 	
+	public final VmType type = VmType.GENERIC; 
+	
 	@XStreamOmitField
 	private int fHashCode = 0;
 	
 	private Map<Host, Period> bootTimes = new HashMap<Host, Period>(); 
+	
+	public VM(int id, VmType type) {
+		this(id,type.ram,type.contractCost,type.sla);
+	}
 	
 	public VM(int id, int ram, double contractCost, SLA sla) {
 		this.id = id;
