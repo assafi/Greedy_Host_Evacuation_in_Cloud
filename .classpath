@@ -5,11 +5,6 @@
 	<classpathentry kind="src" path="test-resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/assafi.TD-CSF/Lib/guice-3.0/guice-3.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/assafi.TD-CSF/Lib/guice-3.0/javax.inject.jar"/>
-	<classpathentry kind="lib" path="C:/Users/assafi.TD-CSF/Lib/guice-3.0/aopalliance.jar"/>
-	<classpathentry kind="lib" path="C:/Users/assafi.TD-CSF/Lib/cofoja/cofoja-1.0-r139.jar"/>
-	<classpathentry kind="lib" path="C:/Users/assafi.TD-CSF/Lib/asm-4.0/lib/asm-4.0.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-2.1/joda-time-2.1.jar" sourcepath="C:/Users/assafi.TD-CSF/workspace/Greedy_Recovery/lib/joda-time-2.1/joda-time-2.1-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Greedy_Recovery/lib/joda-time-2.1/joda-time-2.1-javadoc.jar!/"/>
@@ -21,5 +16,10 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/aopalliance.jar"/>
+	<classpathentry kind="lib" path="lib/asm-all-3.3.jar"/>
+	<classpathentry kind="lib" path="lib/cofoja-1.0-r139.jar"/>
+	<classpathentry kind="lib" path="lib/guice-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/javax.inject.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

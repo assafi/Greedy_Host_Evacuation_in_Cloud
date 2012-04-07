@@ -20,6 +20,7 @@ import com.google.java.contract.Ensures;
 public abstract class SLA {
 
 	final public Period billingPeriod;
+	
 	private Period totalDownTime;
 	
 	/**

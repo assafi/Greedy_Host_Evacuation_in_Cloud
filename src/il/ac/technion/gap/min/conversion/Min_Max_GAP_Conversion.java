@@ -132,3 +132,4 @@ public class Min_Max_GAP_Conversion implements GAP_Alg {
 	}
 
 }
+
