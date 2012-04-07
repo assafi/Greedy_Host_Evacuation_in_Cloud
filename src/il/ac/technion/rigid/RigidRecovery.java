@@ -10,10 +10,10 @@ import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.datacenter.vm.VM;
 import il.ac.technion.gap.GAP_Alg;
+import il.ac.technion.gap.GapUtils;
 import il.ac.technion.knapsack.Bin;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -62,41 +62,9 @@ public class RigidRecovery {
 	}
 
 	private Bin[] solveGAP(List<Host> filteredHosts, List<VM> vms) {
-		int[] binsCapacities = prepareCapacities(filteredHosts);
-		int[][] itemSizes = prepareSizes(filteredHosts.size(), vms);
-		double[][] itemPrices = preparePrices(filteredHosts, vms);
+		int[] binsCapacities = GapUtils.prepareCapacitiesVector(filteredHosts);
+		int[][] itemSizes = GapUtils.prepareSizesMatrix(filteredHosts.size(), vms);
+		double[][] itemPrices = GapUtils.prepareWeightsMatrix(filteredHosts, vms);
 		return gap.solve(binsCapacities, itemSizes, itemPrices);
-	}
-
-	private double[][] preparePrices(List<Host> hosts, List<VM> vms) {
-		double[][] itemPrices = new double[hosts.size()][vms.size()];
-		for (int binIdx = 0; binIdx < hosts.size(); binIdx++) {
-			Host h = hosts.get(binIdx);
-			for (int vmIdx = 0; vmIdx < vms.size(); vmIdx++) {
-				VM vm = vms.get(vmIdx);
-				itemPrices[binIdx][vmIdx] = vm.cost(h);
-			}
-		}
-		return itemPrices;
-	}
-
-	private int[][] prepareSizes(int numBins, List<VM> vms) {
-		int[][] itemSizes = new int[numBins][vms.size()];
-		for (int binIdx = 0; binIdx < numBins; binIdx++) {
-			for (int vmIdx = 0; vmIdx < vms.size(); vmIdx++) {
-				itemSizes[binIdx][vmIdx] = vms.get(vmIdx).size();
-			}
-		}
-		return itemSizes;
-	}
-
-	private int[] prepareCapacities(List<Host> filteredHosts) {
-		int[] binsCapacities = new int[filteredHosts.size()];
-		int i = 0;
-		Iterator<Host> iter = filteredHosts.iterator();
-		while (iter.hasNext()) {
-			binsCapacities[i++] = iter.next().freeCapacity();
-		}
-		return binsCapacities;
 	}
 }

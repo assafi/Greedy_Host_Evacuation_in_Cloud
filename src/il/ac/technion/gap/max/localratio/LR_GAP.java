@@ -20,7 +20,7 @@ import java.util.Set;
 import com.google.inject.Inject;
 import com.google.java.contract.Requires;
 
-public class LR_GAP implements GAP_Alg {
+public class LR_GAP extends GAP_Alg {
 
 	/**
 	 * 

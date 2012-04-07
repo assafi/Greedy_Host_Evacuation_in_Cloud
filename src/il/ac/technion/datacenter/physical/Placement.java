@@ -7,11 +7,14 @@
 package il.ac.technion.datacenter.physical;
 
 import il.ac.technion.datacenter.vm.VM;
+import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.misc.HashCodeUtil;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
@@ -26,9 +29,14 @@ public class Placement {
 	private int fHashCode = 0;
 	
 	public Placement(List<Host> hosts, List<VM> vms) {
-		super();
 		this.hosts = hosts;
 		this.vms = vms;
+	}
+	
+	@Inject
+	public Placement(List<Host> hosts, List<VM> vms, @Named("Min GAP") GAP_Alg gap) {
+		this(hosts,vms);
+		gap.solve(hosts,vms);
 	}
 	
 	@Override

@@ -15,7 +15,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.google.java.contract.Requires;
 
-public class Min_Max_GAP_Conversion implements GAP_Alg {
+public class Min_Max_GAP_Conversion extends GAP_Alg {
 
 	private static final double EPSILON = 0.000001;
 	private final GAP_Alg maxGAP;
@@ -130,6 +130,5 @@ public class Min_Max_GAP_Conversion implements GAP_Alg {
 		}
 		return max;
 	}
-
 }
 
