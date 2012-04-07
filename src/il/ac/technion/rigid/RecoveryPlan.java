@@ -6,6 +6,114 @@
  */
 package il.ac.technion.rigid;
 
+import il.ac.technion.datacenter.physical.Host;
+import il.ac.technion.datacenter.vm.VM;
+import il.ac.technion.knapsack.Bin;
+import il.ac.technion.knapsack.Item;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.google.java.contract.Requires;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+@XStreamAlias("RecoveryPlan")
 public class RecoveryPlan {
 
+	private final Map<Host,List<VM>> rp = new HashMap<Host, List<VM>>();
+	
+	@XStreamAlias("Cost")
+	private double cost = 0.0;
+	private int recoveredVMsCount = 0;
+	private int numActiveHosts = 0;
+	private boolean completeRecovery = false;
+	private static final String delim = System.getProperty("line.separator");
+	
+	public RecoveryPlan(List<Host> hosts) {
+		for (Host host : hosts) {
+			rp.put(host, new LinkedList<VM>());
+			updateHostStats(host);
+		}
+	}
+
+	@Requires("binsPackings.length == targetHosts.size()")
+	public void add(Bin[] binsPackings, List<Host> targetHosts, List<VM> recoveredVMs) {
+		for (int i = 0; i < targetHosts.size(); i++) {
+			Host target = targetHosts.get(i);
+			List<VM> recoveredVMsToTarget = rp.get(target);
+			for (Item item : binsPackings[i].assignedItems()) {
+				VM recoveredVM = recoveredVMs.get(item.id);
+				recoveredVMsToTarget.add(recoveredVM);
+				updateStats(target,recoveredVM);
+			}
+		}
+	}
+
+	private void updateHostStats(Host target) {
+		if (target.isActive()) {
+			numActiveHosts++;
+			cost += target.cost();
+		} 
+	}
+
+	private void updateStats(Host target, VM recoveredVM) {
+		cost += recoveredVM.cost(target);
+		recoveredVMsCount++;
+	}
+	
+	public Map<Host,List<VM>> getMap() {
+		return new HashMap<Host, List<VM>>(rp);
+	}
+	
+	public int activeHostCount() {
+		return numActiveHosts;
+	}
+	
+	public int inactiveHostCount() {
+		return rp.keySet().size() - numActiveHosts;
+	}
+	
+	public double cost() {
+		return cost;
+	}
+	
+	public void reset() {
+		rp.clear();
+		cost = 0.0;
+		recoveredVMsCount = 0;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Total recovery cost: " + cost + delim);
+		sb.append("#VMs: " + recoveredVMsCount + delim);
+		sb.append("#Hosts: " + rp.keySet().size() + delim);
+		sb.append("#Active hosts: " + activeHostCount() + delim);
+		sb.append("#Inactive hosts: " + inactiveHostCount() + delim);
+		sb.append("Complete recovery: " + (isComplete() ? "Yes" : "No") + delim);
+		sb.append("===== Recovery breakdown =====" + delim);
+		for (Host h : rp.keySet()) {
+			sb.append("Host #" + h.id() + " [" + (h.isActive() ? "active - " + h.cost() : "inactive") + "]: ");
+			for (VM vm : rp.get(h)) {
+				sb.append("VM-#" + vm.id + " [" + vm.cost(h) + "] ");
+			}
+			sb.append(delim);
+		}
+		return sb.toString();
+	}
+
+	public int recoveredVMsCount() {
+		return recoveredVMsCount ;
+	}
+	
+	public void full() {
+		completeRecovery  = true;
+	}
+	
+	public boolean isComplete() {
+		return completeRecovery;
+	}
 }

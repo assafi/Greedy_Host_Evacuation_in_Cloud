@@ -31,7 +31,6 @@ public class ProfitsMatrix {
 		"pm != null",
 		"chosenIndexes != null",
 		"!pm.lastColumn()",
-		"false"
 		})
 	private ProfitsMatrix(ProfitsMatrix pm, Collection<Integer> chosenIndexes) {
 		this.profits = new double[pm.profits.length - 1][pm.profits[0].length];
@@ -55,7 +54,6 @@ public class ProfitsMatrix {
 	}
 
 	public boolean lastColumn() {
-		System.err.println("Boo");
 		return profits.length == 1;
 	}
 

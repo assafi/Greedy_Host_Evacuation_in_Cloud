@@ -7,7 +7,6 @@
 package il.ac.technion.knapsack;
 
 import il.ac.technion.knapsack.dp_knapsack.Pair;
-import il.ac.technion.misc.Item;
 
 import java.util.Collection;
 

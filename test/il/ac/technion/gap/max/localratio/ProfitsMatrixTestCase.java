@@ -21,7 +21,6 @@ public class ProfitsMatrixTestCase {
 	 * @throws LastProfitColumnException 
 	 */
 	@Test
-	@Ignore
 	public void testGetResidualProfitMatrix() throws LastProfitColumnException {
 		ProfitsMatrix pm1 = new ProfitsMatrix(new double[][] {{1},{2}});
 		Assert.assertNotNull(pm1.getCurrentColumn());
@@ -36,10 +35,10 @@ public class ProfitsMatrixTestCase {
 		Assert.assertEquals(1.0, pm1.getCurrentColumn()[0]);
 	}
 	
+	@Ignore
 	@Test(expected = com.google.java.contract.PreconditionError.class)
 	public void testGetLastResidualProfitMatrix() {
 		ProfitsMatrix pm1 = new ProfitsMatrix(new double[][] {{1}});
-		System.err.print("Pica-");
 		pm1.getResidualProfitMatrix(null);
 	}
 

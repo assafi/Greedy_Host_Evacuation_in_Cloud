@@ -8,9 +8,9 @@ package il.ac.technion.gap.min.conversion;
 
 import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.gap.GAP_Exception;
-import il.ac.technion.gap.min.conversion.guice.MinGAP_LRMax_Module;
-import il.ac.technion.misc.Bin;
-import il.ac.technion.misc.Item;
+import il.ac.technion.gap.guice.ProductionGAPModule;
+import il.ac.technion.knapsack.Bin;
+import il.ac.technion.knapsack.Item;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +24,7 @@ import com.google.inject.Injector;
 
 public class Min_Max_GAP_Conversion_TestCase {
 
-	Injector inj = Guice.createInjector(new MinGAP_LRMax_Module());
+	Injector inj = Guice.createInjector(new ProductionGAPModule());
 	
 	@Test
 	public void testModule() {

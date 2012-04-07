@@ -7,10 +7,9 @@
 package il.ac.technion.gap.min.conversion;
 
 import il.ac.technion.gap.GAP_Alg;
-import il.ac.technion.gap.GAP_Exception;
-import il.ac.technion.misc.AssignedItem;
-import il.ac.technion.misc.Bin;
-import il.ac.technion.misc.Item;
+import il.ac.technion.knapsack.AssignedItem;
+import il.ac.technion.knapsack.Bin;
+import il.ac.technion.knapsack.Item;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -18,6 +17,7 @@ import com.google.java.contract.Requires;
 
 public class Min_Max_GAP_Conversion implements GAP_Alg {
 
+	private static final double EPSILON = 0.000001;
 	private final GAP_Alg maxGAP;
 
 	@Inject
@@ -83,8 +83,6 @@ public class Min_Max_GAP_Conversion implements GAP_Alg {
 	private void mergeBins(Bin[] source, Bin[] target, double[][] itemsCosts) {
 		for (int i = 0; i < target.length; i++) {
 			for (Item item : source[i].assignedItems()) {
-				System.out.println("target[i].id=" + target[i].id);
-				System.out.println("item.id=" + item.id);
 				double itemCost = itemsCosts[target[i].id][item.id];
 				target[i].assign(new AssignedItem(item.id, item.size, itemCost, target[i]));
 			}
@@ -116,7 +114,7 @@ public class Min_Max_GAP_Conversion implements GAP_Alg {
 		double[][] profitMarix = new double[costsMatrix.length][costsMatrix[0].length];
 		for (int i = 0; i < costsMatrix.length; i++) {
 			for (int j = 0; j < costsMatrix[i].length; j++) {
-				profitMarix[i][j] = max - costsMatrix[i][j];
+				profitMarix[i][j] = max - costsMatrix[i][j] + EPSILON;
 			}
 		}
 		return profitMarix;

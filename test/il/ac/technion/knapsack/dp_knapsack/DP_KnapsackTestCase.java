@@ -6,10 +6,10 @@
  */
 package il.ac.technion.knapsack.dp_knapsack;
 
+import il.ac.technion.knapsack.Item;
 import il.ac.technion.knapsack.KnapsackAlg;
 import il.ac.technion.knapsack.dp_knapsack.Pair;
 import il.ac.technion.knapsack.guice.DP_KnapsackModule;
-import il.ac.technion.misc.Item;
 
 import java.util.Arrays;
 
