@@ -66,4 +66,20 @@ public class Placement {
 		}
 		return sb.toString();
 	}
+	
+	public List<Host> hosts() {
+		return hosts;
+	}
+	
+	public int numHosts() {
+		return hosts.size();
+	}
+	
+	public List<VM> vms() {
+		return vms;
+	}
+	
+	public int numVMs() {
+		return vms.size();
+	}
 }

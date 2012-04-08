@@ -121,31 +121,6 @@
           </type>
           <bootTimes>
             <entry>
-              <host>
-                <bin>
-                  <id>2</id>
-                  <capacity>512</capacity>
-                </bin>
-                <vms class="linked-list"/>
-                <active>false</active>
-                <bootTime>6000</bootTime>
-                <activationCost>10.0</activationCost>
-              </host>
-              <org.joda.time.Period>
-                <iType reference="../../../../type/sla/billingPeriod/iType"/>
-                <iValues>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>200</int>
-                  <int>0</int>
-                  <int>0</int>
-                </iValues>
-              </org.joda.time.Period>
-            </entry>
-            <entry>
               <host reference="../../../../.."/>
               <org.joda.time.Period>
                 <iType reference="../../../../type/sla/billingPeriod/iType"/>
@@ -155,6 +130,31 @@
                   <int>0</int>
                   <int>0</int>
                   <int>1</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                </iValues>
+              </org.joda.time.Period>
+            </entry>
+            <entry>
+              <host>
+                <bin>
+                  <id>1</id>
+                  <capacity>512</capacity>
+                </bin>
+                <vms class="linked-list"/>
+                <active>false</active>
+                <bootTime>180</bootTime>
+                <activationCost>0.0</activationCost>
+              </host>
+              <org.joda.time.Period>
+                <iType reference="../../../../type/sla/billingPeriod/iType"/>
+                <iValues>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>3</int>
+                  <int>0</int>
                   <int>0</int>
                   <int>0</int>
                   <int>0</int>
@@ -189,13 +189,13 @@
             <entry>
               <host>
                 <bin>
-                  <id>1</id>
+                  <id>2</id>
                   <capacity>512</capacity>
                 </bin>
                 <vms class="linked-list"/>
                 <active>false</active>
-                <bootTime>180</bootTime>
-                <activationCost>0.0</activationCost>
+                <bootTime>6000</bootTime>
+                <activationCost>10.0</activationCost>
               </host>
               <org.joda.time.Period>
                 <iType reference="../../../../type/sla/billingPeriod/iType"/>
@@ -203,9 +203,9 @@
                   <int>0</int>
                   <int>0</int>
                   <int>0</int>
-                  <int>3</int>
                   <int>0</int>
                   <int>0</int>
+                  <int>200</int>
                   <int>0</int>
                   <int>0</int>
                 </iValues>
@@ -269,22 +269,6 @@
           </type>
           <bootTimes>
             <entry>
-              <host reference="../../../../VM/bootTimes/entry/host"/>
-              <org.joda.time.Period>
-                <iType reference="../../../../../VM/type/sla/billingPeriod/iType"/>
-                <iValues>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>200</int>
-                  <int>0</int>
-                  <int>0</int>
-                </iValues>
-              </org.joda.time.Period>
-            </entry>
-            <entry>
               <host reference="../../../../.."/>
               <org.joda.time.Period>
                 <iType reference="../../../../../VM/type/sla/billingPeriod/iType"/>
@@ -294,6 +278,22 @@
                   <int>0</int>
                   <int>3</int>
                   <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                </iValues>
+              </org.joda.time.Period>
+            </entry>
+            <entry>
+              <host reference="../../../../VM/bootTimes/entry[2]/host"/>
+              <org.joda.time.Period>
+                <iType reference="../../../../../VM/type/sla/billingPeriod/iType"/>
+                <iValues>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>1</int>
                   <int>0</int>
                   <int>0</int>
                   <int>0</int>
@@ -325,8 +325,8 @@
                   <int>0</int>
                   <int>0</int>
                   <int>0</int>
-                  <int>1</int>
                   <int>0</int>
+                  <int>200</int>
                   <int>0</int>
                   <int>0</int>
                 </iValues>
@@ -339,8 +339,8 @@
       <bootTime>180</bootTime>
       <activationCost>0.0</activationCost>
     </host>
+    <host reference="../host/vms/VM/bootTimes/entry[2]/host"/>
     <host reference="../host/vms/VM/bootTimes/entry[4]/host"/>
-    <host reference="../host/vms/VM/bootTimes/entry/host"/>
     <host reference="../host/vms/VM/bootTimes/entry[3]/host"/>
   </hosts>
   <vms>
