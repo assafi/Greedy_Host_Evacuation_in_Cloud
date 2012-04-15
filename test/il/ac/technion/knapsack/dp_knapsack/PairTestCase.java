@@ -7,7 +7,7 @@
 package il.ac.technion.knapsack.dp_knapsack;
 
 import il.ac.technion.knapsack.Item;
-import il.ac.technion.knapsack.dp_knapsack.Pair;
+import il.ac.technion.knapsack.dp_knapsack.ep.Pair;
 import junit.framework.Assert;
 
 import org.junit.Test;

@@ -9,6 +9,7 @@ package il.ac.technion.data;
 import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.Placement;
 import il.ac.technion.datacenter.vm.VM;
+import il.ac.technion.datacenter.vm.guice.Sequencer;
 import il.ac.technion.datacenter.vm.guice.VmModule;
 import il.ac.technion.datacenter.vm.guice.VmType;
 
@@ -27,9 +28,6 @@ import com.google.inject.Injector;
 
 public class IbmDataCoverter implements DataConverter {
 
-	/**
-	 * 
-	 */
 	private static final Period DEFAULT_HOST_BOOT_TIME = Period.seconds(180);
 	private static final Period DEFAULT_VM_BOOT_TIME = Period.seconds(240);
 	private static final String CSV_DELIMITER = ",";
@@ -48,6 +46,8 @@ public class IbmDataCoverter implements DataConverter {
 	}
 
 	private Placement extractPlacement(Scanner scanner) throws DataException {
+		Sequencer.INSTANCE.reset();
+		
 		int hostID = 0;
 		List<Host> hosts = new LinkedList<Host>();
 		List<VM> vms = new LinkedList<VM>();

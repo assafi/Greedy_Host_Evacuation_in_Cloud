@@ -4,7 +4,7 @@
  * Author: Assaf Israel, 2012
  * Created: 12/03/2012
  */
-package il.ac.technion.knapsack.dp_knapsack;
+package il.ac.technion.knapsack.dp_knapsack.ep;
 
 import il.ac.technion.knapsack.Item;
 
@@ -12,9 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Pair implements Comparable<Pair> {
-	public final int size;
-	public final double value;
-	public Set<Item> items = new HashSet<Item>();
+	private int size;
+	private double value;
+	private Set<Item> items = new HashSet<Item>();
 	
 	public Pair(int size, double value) {
 		this.size = size;
@@ -71,5 +71,26 @@ public class Pair implements Comparable<Pair> {
 	
 	public Set<Item> items() {
 		return new HashSet<Item>(items);
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public double getValue() {
+		return value;
+	}
+
+	public Set<Item> getItems() {
+		return items;
+	}
+	
+	public boolean add(Item item) {
+		if (items.contains(item)) 
+			return false;
+		items.add(item);
+		size += item.size;
+		value += item.value;
+		return true;
 	}
 }

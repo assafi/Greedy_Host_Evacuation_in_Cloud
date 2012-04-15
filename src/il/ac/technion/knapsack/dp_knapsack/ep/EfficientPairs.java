@@ -4,7 +4,7 @@
  * Author: Assaf Israel, 2012
  * Created: 12/03/2012
  */
-package il.ac.technion.knapsack.dp_knapsack;
+package il.ac.technion.knapsack.dp_knapsack.ep;
 
 import il.ac.technion.knapsack.Item;
 
@@ -32,7 +32,7 @@ public class EfficientPairs {
 		}
 		
 		for (Pair pair : eps.collection) {
-			if (pair.size + item.size <= capacity) {
+			if (pair.getSize() + item.size <= capacity) {
 				Pair newPair = new Pair(pair,item);
 				collection.add(newPair);
 				removeDominated(collection,newPair);

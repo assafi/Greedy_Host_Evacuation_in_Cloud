@@ -6,7 +6,7 @@
  */
 package il.ac.technion.knapsack.guice;
 
-import il.ac.technion.knapsack.dp_knapsack.Pair;
+import il.ac.technion.knapsack.dp_knapsack.ep.Pair;
 
 import java.util.Collection;
 import java.util.LinkedList;

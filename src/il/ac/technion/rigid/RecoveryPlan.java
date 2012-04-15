@@ -11,6 +11,9 @@ import il.ac.technion.datacenter.vm.VM;
 import il.ac.technion.knapsack.Bin;
 import il.ac.technion.knapsack.Item;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -95,7 +98,16 @@ public class RecoveryPlan {
 		sb.append("#Inactive hosts: " + inactiveHostCount() + delim);
 		sb.append("Complete recovery: " + (isComplete() ? "Yes" : "No") + delim);
 		sb.append("===== Recovery breakdown =====" + delim);
-		for (Host h : rp.keySet()) {
+		
+		List<Host> hosts = new ArrayList<Host>(rp.keySet());
+		Collections.sort(hosts, new Comparator<Host>() {
+
+			@Override
+			public int compare(Host h1, Host h2) {
+				return h1.id() - h2.id();
+			}});
+		
+		for (Host h : hosts) {
 			sb.append("Host #" + h.id() + " [" + (h.isActive() ? "active - " + h.cost() : "inactive") + "]: ");
 			for (VM vm : rp.get(h)) {
 				sb.append("VM-#" + vm.id + " [" + vm.cost(h) + "] ");

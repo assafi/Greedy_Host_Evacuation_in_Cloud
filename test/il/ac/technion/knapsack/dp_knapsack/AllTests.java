@@ -13,5 +13,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({ 
 PairTestCase.class,
 EfficientPairsTestCase.class,
-DP_KnapsackTestCase.class,})
+DP_EP_KnapsackTestCase.class,
+DP_Matrix_KnapsackTestCase.class,})
 public class AllTests {}

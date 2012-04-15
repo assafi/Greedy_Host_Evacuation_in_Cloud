@@ -10,9 +10,11 @@ import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.gap.max.localratio.LR_GAP;
 import il.ac.technion.gap.min.conversion.Min_Max_GAP_Conversion;
 import il.ac.technion.knapsack.KnapsackAlg;
-import il.ac.technion.knapsack.guice.DP_KnapsackModule;
+import il.ac.technion.knapsack.guice.DP_Matrix_KnapsackModule;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.name.Names;
 
@@ -25,9 +27,15 @@ public class ProductionGAPModule extends AbstractModule {
 		bind(GAP_Alg.class).annotatedWith(Names.named("Max GAP")).to(LR_GAP.class);
 	}
 	
-	@Provides
+//	@Provides
+//	public KnapsackAlg getKnapsack() {
+//		DP_EP_KnapsackModule dpm = new DP_EP_KnapsackModule();
+//		return dpm.getEP_Knapsack();
+//	}
+	
+	@Provides 
 	public KnapsackAlg getKnapsack() {
-		DP_KnapsackModule dpm = new DP_KnapsackModule();
-		return dpm.getKnapsack();
+		Injector inj = Guice.createInjector(new DP_Matrix_KnapsackModule());
+		return inj.getInstance(KnapsackAlg.class);
 	}
 }

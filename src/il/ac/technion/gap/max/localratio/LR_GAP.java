@@ -10,7 +10,7 @@ import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.knapsack.Bin;
 import il.ac.technion.knapsack.Item;
 import il.ac.technion.knapsack.KnapsackAlg;
-import il.ac.technion.knapsack.dp_knapsack.Pair;
+import il.ac.technion.knapsack.dp_knapsack.ep.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,11 +56,11 @@ public class LR_GAP extends GAP_Alg {
 			Collection<Item> items = prepareItems(itemSizes[binIdx],
 					pm.getCurrentColumn());
 			Pair p = knapsack.solve(items, binsCapacities[binIdx]);
-			for (Item item : p.items) {
+			for (Item item : p.getItems()) {
 				itemsAssignments[item.id] = binIdx;
 			}
 			if (!pm.lastColumn()) {
-				pm = pm.getResidualProfitMatrix(itemIndexes(p.items));
+				pm = pm.getResidualProfitMatrix(itemIndexes(p.getItems()));
 			}
 		}
 		

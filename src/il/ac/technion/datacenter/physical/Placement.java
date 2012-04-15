@@ -10,11 +10,13 @@ import il.ac.technion.datacenter.vm.VM;
 import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.misc.HashCodeUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.google.java.contract.Requires;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
@@ -81,5 +83,18 @@ public class Placement {
 	
 	public int numVMs() {
 		return vms.size();
+	}
+
+	@Requires("old(n) > 0")
+	public List<PhysicalAffinity> groupHostsToNAffinities(String affinityName, int n) {
+		List<PhysicalAffinity> la = new ArrayList<PhysicalAffinity>(n);
+		for (int i = 0; i < n; i++) {
+			la.add(new PhysicalAffinity(affinityName, i));
+		}
+		
+		for (Host host : hosts) {
+			host.join(la.get(host.id() % n));
+		}
+		return la;
 	}
 }

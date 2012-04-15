@@ -7,19 +7,20 @@
 package il.ac.technion.knapsack.guice;
 
 import il.ac.technion.knapsack.KnapsackAlg;
-import il.ac.technion.knapsack.dp_knapsack.DP_Knapsack;
+import il.ac.technion.knapsack.dp_knapsack.ep.DP_EP_Knapsack;
 
 import com.google.inject.Guice;
 import com.google.inject.Provides;
 
-public class DP_KnapsackModule extends KnapsackModule {
+public class DP_EP_KnapsackModule extends KnapsackModule {
 
 	@Override
 	protected void configure() {
+		bind(KnapsackAlg.class).to(DP_EP_Knapsack.class);
 	}
 
 	@Provides
-	public KnapsackAlg getKnapsack() {
-		return new DP_Knapsack(Guice.createInjector(new EfficientPairsModule()));
+	public DP_EP_Knapsack getEP_Knapsack() {
+		return new DP_EP_Knapsack(Guice.createInjector(new EfficientPairsModule()));
 	}
 }

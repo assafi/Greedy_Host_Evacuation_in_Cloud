@@ -7,6 +7,8 @@
 package il.ac.technion.knapsack.dp_knapsack;
 
 import il.ac.technion.knapsack.Item;
+import il.ac.technion.knapsack.dp_knapsack.ep.EfficientPairs;
+import il.ac.technion.knapsack.dp_knapsack.ep.Pair;
 import il.ac.technion.knapsack.dp_knapsack.guice.IntrospectionEfficientPairsModule;
 import il.ac.technion.knapsack.guice.EfficientPairsModule;
 
@@ -40,7 +42,7 @@ public class EfficientPairsTestCase {
 	}
 
 	/**
-	 * Test method for {@link il.ac.technion.knapsack.dp_knapsack.EfficientPairs#build(il.ac.technion.knapsack.dp_knapsack.EfficientPairs, il.ac.technion.knapsack.Item, int)}.
+	 * Test method for {@link il.ac.technion.knapsack.dp_knapsack.ep.EfficientPairs#build(il.ac.technion.knapsack.dp_knapsack.ep.EfficientPairs, il.ac.technion.knapsack.Item, int)}.
 	 */
 	public void zeroCapacity() {
 		eps1.build(eps2, new Item(1,1,1), 0);

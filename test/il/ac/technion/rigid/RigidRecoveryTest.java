@@ -64,6 +64,7 @@ public class RigidRecoveryTest {
 		hosts.add(h3);
 		
 		RecoveryPlan rp = rr.hostsRecovery(hosts);
+		System.out.println(rp);
 		assertTrue(rp.getMap().get(h3).contains(vm1));
 		assertTrue(rp.getMap().get(h3).contains(vm2));
 	}

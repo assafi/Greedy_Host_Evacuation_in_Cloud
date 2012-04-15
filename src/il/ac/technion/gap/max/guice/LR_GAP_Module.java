@@ -8,7 +8,7 @@ package il.ac.technion.gap.max.guice;
 
 import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.gap.max.localratio.LR_GAP;
-import il.ac.technion.knapsack.guice.DP_KnapsackModule;
+import il.ac.technion.knapsack.guice.DP_EP_KnapsackModule;
 import il.ac.technion.knapsack.guice.KnapsackModule;
 
 import com.google.inject.AbstractModule;
@@ -20,7 +20,7 @@ public class LR_GAP_Module extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		bind(KnapsackModule.class).toInstance(new DP_KnapsackModule());
+		bind(KnapsackModule.class).toInstance(new DP_EP_KnapsackModule());
 	}
 	
 	@Provides
