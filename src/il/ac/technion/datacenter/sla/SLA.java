@@ -56,8 +56,12 @@ public abstract class SLA {
 		"result >= 0.0"
 	})
 	public double availability() {
-		return ((double)PeriodCoverter.toMillis(billingPeriod.minus(totalDownTime)) / 
-		PeriodCoverter.toMillis(billingPeriod)) * 100.0;
+		return availability(Period.ZERO);
+	}
+	
+	public double availability(Period downTime) {
+		return ((double)PeriodCoverter.toSeconds(billingPeriod.minus(totalDownTime.plus(downTime))) / 
+				PeriodCoverter.toSeconds(billingPeriod)) * 100.0;
 	}
 	
 	/**
@@ -80,6 +84,7 @@ public abstract class SLA {
 	 * compensation is 0.   
 	 */
 	@Ensures({
+		"estimatedDownTime != null",
 		"zeroCostCheck(old(estimatedDownTime),result)",
 		"result >= 0.0"}) 
 	public abstract double compensation(Period estimatedDownTime);

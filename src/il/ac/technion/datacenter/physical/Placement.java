@@ -85,16 +85,24 @@ public class Placement {
 		return vms.size();
 	}
 
-	@Requires("old(n) > 0")
-	public List<PhysicalAffinity> groupHostsToNAffinities(String affinityName, int n) {
+	@Requires("n > 0")
+	public List<PhysicalAffinity> groupKHostsToNAffinities(String affinityName, int k, int n) {
 		List<PhysicalAffinity> la = new ArrayList<PhysicalAffinity>(n);
 		for (int i = 0; i < n; i++) {
 			la.add(new PhysicalAffinity(affinityName, i));
 		}
 		
+		PhysicalAffinity backup = new PhysicalAffinity("backup",n);
+		la.add(backup);
+		
 		for (Host host : hosts) {
-			host.join(la.get(host.id() % n));
+			if (host.id() <= k) {
+				host.join(la.get(host.id() % n));
+			} else {
+				host.join(backup);
+			}
 		}
+		
 		return la;
 	}
 }

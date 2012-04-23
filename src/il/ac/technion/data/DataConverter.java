@@ -12,7 +12,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public interface DataConverter {
-	public Placement convert(File file) throws IOException, DataException;
-	public Placement convert(InputStream csvIn) throws IOException, DataException;
+import com.google.inject.Injector;
+
+public abstract class DataConverter {
+	
+	public final Injector slaInjector;
+	
+	public DataConverter(Injector inj) {
+		this.slaInjector = inj;
+	}
+	
+	public abstract Placement convert(File file) throws IOException, DataException;
+	public abstract Placement convert(InputStream csvIn) throws IOException, DataException;
 }

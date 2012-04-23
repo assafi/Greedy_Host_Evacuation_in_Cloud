@@ -70,7 +70,7 @@ public class Host {
 
 	public Period bootTime() {
 		if (active)
-			return new Period();
+			return Period.ZERO;
 		return bootTime;
 	}
 

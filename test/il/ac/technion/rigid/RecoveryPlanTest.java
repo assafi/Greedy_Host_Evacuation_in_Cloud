@@ -40,8 +40,8 @@ public class RecoveryPlanTest {
 		bins[0] = new Bin(0,2);
 		bins[1] = new Bin(1,3);
 		List<Host> hosts = new ArrayList<Host>(2);
-		hosts.add(new Host(bins[0],1.0,Period.millis(1000)));
-		hosts.add(new Host(bins[1],1.0,Period.millis(1000)));
+		hosts.add(new Host(bins[0],1.0,Period.seconds(1)));
+		hosts.add(new Host(bins[1],1.0,Period.seconds(1)));
 		RecoveryPlan rp = new RecoveryPlan(hosts);
 		VM vm = new VM(0, 2, 100.0, sla);
 		vm.addBootTime(hosts.get(0), Period.days(3));

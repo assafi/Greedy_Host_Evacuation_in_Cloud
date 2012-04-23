@@ -57,8 +57,8 @@ public class RecoveryPlan {
 	private void updateHostStats(Host target) {
 		if (target.isActive()) {
 			numActiveHosts++;
-			cost += target.cost();
 		} 
+		cost += target.cost();
 	}
 
 	private void updateStats(Host target, VM recoveredVM) {

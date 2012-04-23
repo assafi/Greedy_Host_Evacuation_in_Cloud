@@ -6,8 +6,6 @@
  */
 package il.ac.technion.datacenter.sla;
 
-import il.ac.technion.misc.PeriodCoverter;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -49,8 +47,7 @@ public class TableSLA extends SLA {
 	@Override
 	@Requires("estimatedDownTime != null")
 	public double compensation(Period estimatedDownTime) {
-		double availability = super.availability();
-		availability -= ((double) PeriodCoverter.toSeconds(estimatedDownTime) / PeriodCoverter.toSeconds(billingPeriod)) * 100.0;
+		double availability = availability(estimatedDownTime);
 		Range r = null;
 		if (availability != 0.0)
 			r = findRange(availability);
@@ -69,7 +66,7 @@ public class TableSLA extends SLA {
 
 	@Override
 	public double compensation() {
-		return compensation(new Period());
+		return compensation(Period.ZERO);
 	}
 
 	private boolean verifyTable(Map<Range, Double> cTable) {

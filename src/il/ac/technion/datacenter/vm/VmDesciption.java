@@ -6,25 +6,26 @@
  */
 package il.ac.technion.datacenter.vm;
 
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
-import il.ac.technion.datacenter.sla.SLA;
 import il.ac.technion.misc.HashCodeUtil;
+
+import org.joda.time.Period;
+
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 public class VmDesciption {
 	public final String description;
 	public final int size;
 	public final double contractCost;
-	public final SLA sla;
+	public final Period defaultBootTime;
 
 	@XStreamOmitField
 	private int fHashCode = 0;
 	
-	public VmDesciption(String description,  int size, double contractCost, SLA sla) {
+	public VmDesciption(String description,  int size, Period defaultBootTime, double contractCost) {
 		this.description = description;
 		this.size = size;
+		this.defaultBootTime = defaultBootTime;
 		this.contractCost = contractCost;
-		this.sla = sla;
 	}
 	
 	@Override
@@ -35,8 +36,7 @@ public class VmDesciption {
 		VmDesciption vmd = (VmDesciption)obj;
 		return description.equals(vmd.description) &&
 				size == vmd.size &&
-				contractCost == vmd.contractCost &&
-				sla.equals(vmd.sla);
+				contractCost == vmd.contractCost;
 	}
 	
 	@Override
@@ -46,7 +46,6 @@ public class VmDesciption {
 			result = HashCodeUtil.hash(result, description);
 			result = HashCodeUtil.hash(result, size);
 			result = HashCodeUtil.hash(result, contractCost);
-			result = HashCodeUtil.hash(result, sla);
 			fHashCode = result;
 		}
 		return fHashCode;

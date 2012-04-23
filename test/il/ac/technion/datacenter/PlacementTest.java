@@ -10,7 +10,6 @@ package il.ac.technion.datacenter;
 import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.Placement;
 import il.ac.technion.datacenter.vm.VM;
-import il.ac.technion.datacenter.vm.guice.VmModule;
 import il.ac.technion.datacenter.vm.guice.VmType;
 
 import java.util.ArrayList;
@@ -19,13 +18,8 @@ import java.util.List;
 import org.joda.time.Period;
 import org.junit.Test;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-
 public class PlacementTest {
 
-	private Injector inj = Guice.createInjector(new VmModule(VmType.SMALL));
-	
 	@Test
 	public void print() {
 		List<Host> hosts = new ArrayList<Host>(2);
@@ -35,7 +29,7 @@ public class PlacementTest {
 		Host h2 = new Host(2, 2, 10.0, Period.minutes(100));
 		Host h3 = new Host(3, 1, 2.0, Period.minutes(100));
 		
-		VM vm0 = inj.getInstance(VM.class);
+		VM vm0 = VmType.SMALL.createVm();
 		vms.add(vm0);
 		vm0.addBootTime(h0, Period.hours(1));
 		vm0.addBootTime(h1, Period.days(3));
@@ -44,7 +38,7 @@ public class PlacementTest {
 		h0.assign(vm0);
 		h0.activate();
 		
-		VM vm1 = inj.getInstance(VM.class);
+		VM vm1 = VmType.SMALL.createVm();
 		vms.add(vm1);
 		vm1.addBootTime(h0, Period.days(3));
 		vm1.addBootTime(h1, Period.hours(1));

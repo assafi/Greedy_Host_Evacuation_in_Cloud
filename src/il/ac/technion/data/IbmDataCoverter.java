@@ -8,9 +8,9 @@ package il.ac.technion.data;
 
 import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.Placement;
+import il.ac.technion.datacenter.sla.guice.AppEngineSLAModule;
 import il.ac.technion.datacenter.vm.VM;
 import il.ac.technion.datacenter.vm.guice.Sequencer;
-import il.ac.technion.datacenter.vm.guice.VmModule;
 import il.ac.technion.datacenter.vm.guice.VmType;
 
 import java.io.File;
@@ -26,13 +26,23 @@ import org.joda.time.Period;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-public class IbmDataCoverter implements DataConverter {
+public class IbmDataCoverter extends DataConverter {
+
 
 	private static final Period DEFAULT_HOST_BOOT_TIME = Period.seconds(180);
 	private static final Period DEFAULT_VM_BOOT_TIME = Period.seconds(240);
 	private static final String CSV_DELIMITER = ",";
-	private static final double DEFAULT_ACTIVATION_COST = 150.0;
-
+	private static final double DEFAULT_ACTIVATION_COST = 800.0;
+	
+	public IbmDataCoverter() {
+		this(Guice.createInjector(new AppEngineSLAModule()));
+	}
+	
+	public IbmDataCoverter(Injector inj) {
+		super(inj);
+		VmType.setInjector(inj);
+	}
+	
 	@Override
 	public Placement convert(File csvFile) throws IOException, DataException {
 		Scanner scanner = new Scanner(csvFile);
@@ -100,10 +110,9 @@ public class IbmDataCoverter implements DataConverter {
 	}
 
 	private List<VM> createVMs(int num, VmType type) {
-		Injector inj = Guice.createInjector(new VmModule(type));
 		List<VM> $ = new ArrayList<VM>(num);
 		for (int i = 0; i < num; i++) {
-			$.add(inj.getInstance(VM.class));
+			$.add(type.createVm());
 		}
 		return $;
 	}

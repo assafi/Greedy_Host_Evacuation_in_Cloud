@@ -1,29 +1,50 @@
 package il.ac.technion.datacenter.vm.guice;
 
+import il.ac.technion.datacenter.sla.SLA;
+import il.ac.technion.datacenter.sla.guice.AppEngineSLAModule;
 import il.ac.technion.datacenter.vm.VM;
+import il.ac.technion.datacenter.vm.VmDesciption;
 
-import com.google.inject.Provider;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public enum VmType {
 	SMALL {
+		private Injector vmdInj = Guice.createInjector(new SmallVmDescriptionModule());
+
 		@Override
-		public Class<? extends Provider<VM>> getProvider() {
-			return SmallVmProvider.class;
-		}
+		public VmDesciption getVmDescription() {
+			return vmdInj.getInstance(VmDesciption.class);
+		} 
 	},
 	MEDIUM {
+		private Injector vmdInj = Guice.createInjector(new MediumVmDescriptionModule());
+
 		@Override
-		public Class<? extends Provider<VM>> getProvider() {
-			return MediumVmProvider.class;
-		}
+		public VmDesciption getVmDescription() {
+			return vmdInj.getInstance(VmDesciption.class);
+		} 
 	} ,
 	LARGE {
+		private Injector vmdInj = Guice.createInjector(new LargeVmDescriptionModule());
+		
 		@Override
-		public Class<? extends Provider<VM>> getProvider() {
-			return LargeVmProvider.class;
-		}
+		public VmDesciption getVmDescription() {
+			return vmdInj.getInstance(VmDesciption.class);
+		} 
 	},
 	;
 	
-	public abstract Class<? extends Provider<VM>> getProvider();
+	private static Injector slaInjector = Guice.createInjector(new AppEngineSLAModule()); // Default SLA injector
+	
+	public VM createVm() {
+		VmDesciption vmd = getVmDescription();
+		SLA sla = slaInjector.getInstance(SLA.class);
+		return new VM(Sequencer.INSTANCE.get(), sla, vmd);
+	}
+	public abstract VmDesciption getVmDescription();
+	
+	public static void setInjector(Injector _slaInjector) {
+		slaInjector = _slaInjector;
+	}
 }
