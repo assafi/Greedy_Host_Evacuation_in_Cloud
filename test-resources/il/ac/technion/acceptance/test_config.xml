@@ -4,9 +4,9 @@
 	<backupHosts num="10">
 		<capacity>30</capacity>
 		<activationCost>800</activationCost>
+		<hostBootTime>180</hostBootTime>
 	</backupHosts>
 	<vmBootTime>240</vmBootTime>
-	<hostBootTime>180</hostBootTime>
 	<SLA type="custom">
 		<range>
 			<start>99.9999</start>

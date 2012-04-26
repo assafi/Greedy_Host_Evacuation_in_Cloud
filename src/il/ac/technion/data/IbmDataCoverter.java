@@ -133,6 +133,4 @@ public class IbmDataCoverter extends DataConverter {
 		}
 		return ints;
 	}
-
-
 }
