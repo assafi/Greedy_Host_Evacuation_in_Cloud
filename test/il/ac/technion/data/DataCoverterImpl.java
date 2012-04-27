@@ -6,16 +6,14 @@
  */
 package il.ac.technion.data;
 
+import il.ac.technion.config.TestConfiguration;
 import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.Placement;
-import il.ac.technion.datacenter.sla.guice.AppEngineSLAModule;
 import il.ac.technion.datacenter.vm.VM;
 import il.ac.technion.datacenter.vm.guice.Sequencer;
 import il.ac.technion.datacenter.vm.guice.VmType;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,39 +21,17 @@ import java.util.Scanner;
 
 import org.joda.time.Period;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+public class DataCoverterImpl extends DataConverter {
 
-public class IbmDataCoverter extends DataConverter {
-
-
-	private static final Period DEFAULT_HOST_BOOT_TIME = Period.seconds(180);
-	private static final Period DEFAULT_VM_BOOT_TIME = Period.seconds(240);
 	private static final String CSV_DELIMITER = ",";
-	private static final double DEFAULT_ACTIVATION_COST = 800.0;
-	
-	public IbmDataCoverter() {
-		this(Guice.createInjector(new AppEngineSLAModule()));
-	}
-	
-	public IbmDataCoverter(Injector inj) {
-		super(inj);
-		VmType.setInjector(inj);
-	}
 	
 	@Override
-	public Placement convert(File csvFile) throws IOException, DataException {
-		Scanner scanner = new Scanner(csvFile);
-		return extractPlacement(scanner);
+	public Placement convert(TestConfiguration tConfig) throws IOException, DataException {
+		Scanner scanner = new Scanner(tConfig.getDataFile());
+		return extractPlacement(tConfig, scanner);
 	}
 	
-	@Override
-	public Placement convert(InputStream csvIn) throws IOException, DataException {
-		Scanner scanner = new Scanner(csvIn);
-		return extractPlacement(scanner);
-	}
-
-	private Placement extractPlacement(Scanner scanner) throws DataException {
+	private Placement extractPlacement(TestConfiguration tConfig, Scanner scanner) throws DataException {
 		Sequencer.INSTANCE.reset();
 		
 		int hostID = 0;
@@ -80,10 +56,10 @@ public class IbmDataCoverter extends DataConverter {
 			
 			double activationCost = 0.0;
 			if (numSmall + numMedium + numLarge == 0) {
-				activationCost = DEFAULT_ACTIVATION_COST;
+				activationCost = tConfig.getHostActivationCost();
 			} 
 			
-			Period bootTime = DEFAULT_HOST_BOOT_TIME;
+			Period bootTime = tConfig.getHostBootTime();
 			
 			Host host = new Host(hostID++, hostCapacity, activationCost, bootTime);
 			
@@ -100,12 +76,22 @@ public class IbmDataCoverter extends DataConverter {
 			
 			for (VM vm : newVms) {
 				host.assign(vm);
-				vm.addBootTime(host, DEFAULT_VM_BOOT_TIME);
+				vm.addBootTime(host, tConfig.getVmBootTime());
 			}
 			vms.addAll(newVms);
 		}
-		
+
 		scanner.close();
+		
+		/* Backup hosts */
+		for (Host bHost : tConfig.getBackupHosts()) {
+			Host bHostClone = bHost.clone(hostID++);
+			for (VM vm : vms) {
+				vm.addBootTime(bHostClone, tConfig.getVmBootTime());
+			}
+			hosts.add(bHostClone);
+		}
+		
 		return new Placement(new ArrayList<Host>(hosts), new ArrayList<VM>(vms));
 	}
 

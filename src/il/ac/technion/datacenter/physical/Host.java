@@ -146,6 +146,10 @@ public class Host {
 		return false;
 	}
 
+	public Host clone(int id) {
+		return new Host(id,bin.capacity,activationCost,bootTime);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

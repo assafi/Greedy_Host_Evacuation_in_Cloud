@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test>
 	<dataFile>data1.csv</dataFile>
-	<backupHosts num="10">
+	<backupHosts num="30">
 		<capacity>30</capacity>
 		<activationCost>800</activationCost>
 		<hostBootTime>180</hostBootTime>

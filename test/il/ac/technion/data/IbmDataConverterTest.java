@@ -7,32 +7,21 @@
 package il.ac.technion.data;
 
 
+import il.ac.technion.config.TestConfiguration;
 import il.ac.technion.datacenter.physical.Placement;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class IbmDataConverterTest {
 
-	private static final String fileName = "data1.csv";
-	private InputStream csvIn = null;
-	private DataConverter dc = null;
-	
-	@Before
-	public void setUp() throws Exception {
-		csvIn = getClass().getResourceAsStream(fileName);
-		dc = new IbmDataCoverter();
-	}
+	private static final String configFileName = IbmDataConverterTest.class.getResource("test_config.xml").getPath();
+	private DataConverter dc = new DataCoverterImpl();
 	
 	@Test
-	public void IbmDataTest() throws IOException, DataException {
-		Placement p = dc.convert(csvIn);
-		Assert.assertEquals(137, p.numHosts());
+	public void IbmDataTest() throws Exception {
+		Placement p = dc.convert(new TestConfiguration(configFileName));
+		Assert.assertEquals(137 + 10, p.numHosts());
 		Assert.assertEquals(1740, p.numVMs());
 	}
 }

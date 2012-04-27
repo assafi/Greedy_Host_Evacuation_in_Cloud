@@ -6,18 +6,15 @@
  */
 package il.ac.technion.acceptance;
 
-import il.ac.technion.datacenter.sla.guice.LinearSLAModule;
-import il.ac.technion.gap.guice.ProductionGAPModule;
+import il.ac.technion.config.TestConfiguration;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+public class IBM_AcceptanceTestWithLinearSLA_XL_BackupHosts extends
+		AbstractAcceptanceTest {
+	private static final String configFileName = "test_config_xl_backup.xml";
 
-public class IBM_AcceptanceTestWithLinearSLA_XL_BackupHosts extends AbstractAcceptanceTest {
-	private static final String fileName = "data1_with_spare_extra_large.csv";
-	
-	private static Injector inj = Guice.createInjector(new ProductionGAPModule(), new LinearSLAModule());
-	
-	public IBM_AcceptanceTestWithLinearSLA_XL_BackupHosts() {
-		super(inj,fileName);
+	public IBM_AcceptanceTestWithLinearSLA_XL_BackupHosts() throws Exception {
+		super(new TestConfiguration(
+				IBM_AcceptanceTestWithLinearSLA_XL_BackupHosts.class.getResource(
+						configFileName).getPath()));
 	}
 }

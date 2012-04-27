@@ -11,7 +11,6 @@ import il.ac.technion.gap.GAP_Alg;
 import il.ac.technion.misc.HashCodeUtil;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -24,8 +23,8 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 public class Placement {
 
 	private static final String delim = System.getProperty("line.separator");
-	private List<Host> hosts = new LinkedList<Host>();
-	private List<VM> vms = new LinkedList<VM>();
+	private List<Host> hosts = null;
+	private List<VM> vms = null;
 	
 	@XStreamOmitField
 	private int fHashCode = 0;
