@@ -14,7 +14,7 @@ import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.datacenter.sla.SLA;
 import il.ac.technion.datacenter.sla.guice.AppEngineSLAModule;
 import il.ac.technion.datacenter.vm.VM;
-import il.ac.technion.gap.guice.ProductionGAPModule;
+import il.ac.technion.gap.guice.ProductionModule;
 import il.ac.technion.rigid.RecoveryPlan;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import com.google.inject.Injector;
 
 public class SemiRigidRecoveryTest {
 
-	private Injector inj = Guice.createInjector(new ProductionGAPModule(), new AppEngineSLAModule());
+	private Injector inj = Guice.createInjector(new ProductionModule(), new AppEngineSLAModule());
 	private SemiRigidLSRecovery srr = inj.getInstance(SemiRigidLSRecovery.class);
 	
 	private static int testCount = 1;

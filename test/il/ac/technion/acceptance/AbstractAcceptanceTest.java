@@ -13,12 +13,12 @@ import il.ac.technion.data.DataException;
 import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.datacenter.physical.Placement;
 import il.ac.technion.rigid.RecoveryPlan;
+import il.ac.technion.rigid.RigidRecovery;
 import il.ac.technion.semi_rigid.SemiRigidLSRecovery;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -30,22 +30,18 @@ public class AbstractAcceptanceTest {
 	
 	private Injector inj = null;
 	private SemiRigidLSRecovery srr = null;
-	
+	private RigidRecovery rr = null;
 	
 	public AbstractAcceptanceTest(TestConfiguration tConfig) {
 		this.tConfig = tConfig;
-		this.inj = tConfig.getInjector();
+		this.inj = tConfig.getSlaInjector();
 		this.srr = inj.getInstance(SemiRigidLSRecovery.class);
-	}
-	
-	@Before
-	public void setUp() throws Exception {
-		
+		this.rr = inj.getInstance(RigidRecovery.class);
 	}
 	
 	@Ignore
 	@Test
-	public void testHostRecovery() throws IOException, DataException {
+	public void testSemiRigidHostRecovery() throws IOException, DataException {
 		Placement p = dc.convert(tConfig);
 		System.out.println("===== Placement =====");
 		System.out.println(p);
@@ -53,15 +49,46 @@ public class AbstractAcceptanceTest {
 		System.out.println(rp);
 	}
 	
+//	@Ignore
 	@Test
-	public void testAffinityOf4() throws IOException, DataException {
+	public void testSemiRigidAffinityOfK() throws IOException, DataException {
 		Placement p = dc.convert(tConfig);
 		System.out.println("===== Placement =====");
 		System.out.println(p);
 		
-		List<PhysicalAffinity> la = p.groupKHostsToNAffinities("Rack",p.numHosts() - tConfig.getBackupHosts().size(),4);
+		List<PhysicalAffinity> la = p.groupHostsToNAffinities("Rack",tConfig.getNumAffinities());
+//		List<PhysicalAffinity> la = p.groupKHostsToNAffinities("Rack",tConfig.getNumAffinities(),tConfig.getNumAffinities());
 		
 		RecoveryPlan rp = srr.affinityRecovery(la);
+		System.out.println(rp);
+	}
+	
+//	@Ignore
+	@Test
+	public void testInactiveBackupsRigidAffinityOfK() throws IOException, DataException {
+		Placement p = dc.convert(tConfig);
+		System.out.println("===== Placement =====");
+		System.out.println(p);
+		
+		List<PhysicalAffinity> la = p.groupHostsToNAffinities("Rack",tConfig.getNumAffinities());
+//		List<PhysicalAffinity> la = p.groupKHostsToNAffinities("Rack",tConfig.getNumAffinities(),tConfig.getNumAffinities());
+		
+		RecoveryPlan rp = rr.affinityRecovery(la);
+		System.out.println(rp);
+	}
+	
+//	@Ignore
+	@Test
+	public void testActiveBackupsRigidAffinityOfK() throws IOException, DataException {
+		Placement p = dc.convert(tConfig);
+		p.activateAll();
+		System.out.println("===== Placement =====");
+		System.out.println(p);
+		
+		List<PhysicalAffinity> la = p.groupHostsToNAffinities("Rack",tConfig.getNumAffinities());
+//		List<PhysicalAffinity> la = p.groupKHostsToNAffinities("Rack",tConfig.getNumAffinities(),tConfig.getNumAffinities());
+		
+		RecoveryPlan rp = rr.affinityRecovery(la);
 		System.out.println(rp);
 	}
 }

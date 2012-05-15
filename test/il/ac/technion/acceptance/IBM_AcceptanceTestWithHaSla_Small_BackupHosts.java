@@ -8,14 +8,14 @@ package il.ac.technion.acceptance;
 
 import il.ac.technion.config.TestConfiguration;
 
-public class IBM_AcceptanceTestWithLinearSLA_Small_BackupHosts extends
+public class IBM_AcceptanceTestWithHaSla_Small_BackupHosts extends
 		AbstractAcceptanceTest {
 
 	private static final String configFileName = "test_config_small_backup.xml";
 
-	public IBM_AcceptanceTestWithLinearSLA_Small_BackupHosts() throws Exception {
+	public IBM_AcceptanceTestWithHaSla_Small_BackupHosts() throws Exception {
 		super(new TestConfiguration(
-				IBM_AcceptanceTestWithLinearSLA_Small_BackupHosts.class.getResource(
+				IBM_AcceptanceTestWithHaSla_Small_BackupHosts.class.getResource(
 						configFileName).getPath()));
 	}
 }

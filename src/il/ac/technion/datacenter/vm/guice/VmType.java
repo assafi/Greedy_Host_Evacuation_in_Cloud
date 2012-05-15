@@ -1,5 +1,6 @@
 package il.ac.technion.datacenter.vm.guice;
 
+import il.ac.technion.config.TestConfiguration;
 import il.ac.technion.datacenter.sla.SLA;
 import il.ac.technion.datacenter.sla.guice.AppEngineSLAModule;
 import il.ac.technion.datacenter.vm.VM;
@@ -44,7 +45,11 @@ public enum VmType {
 	}
 	public abstract VmDesciption getVmDescription();
 	
-	public static void setInjector(Injector _slaInjector) {
+	public static void setSlaInjector(Injector _slaInjector) {
 		slaInjector = _slaInjector;
+	}
+	
+	public static void configure(TestConfiguration tConfig) {
+		slaInjector = tConfig.getSlaInjector();
 	}
 }

@@ -12,7 +12,7 @@ import il.ac.technion.datacenter.sla.guice.AppEngineSLAModule;
 import il.ac.technion.datacenter.sla.guice.CustomSLAModule;
 import il.ac.technion.datacenter.sla.guice.HA_TableSLAModule;
 import il.ac.technion.datacenter.sla.guice.LinearSLAModule;
-import il.ac.technion.gap.guice.ProductionGAPModule;
+import il.ac.technion.gap.guice.ProductionModule;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +48,8 @@ public class TestConfiguration {
 	private Period hostBootTime;
 	private Injector injector;
 	private double aCost;
+	private int numAffinities;
+	private boolean pack;
 
 	public TestConfiguration(String configFilePath) throws IOException, XPathExpressionException, ParserConfigurationException, SAXException, ConfigurationException {
 		File cFile = new File(configFilePath);
@@ -71,18 +73,19 @@ public class TestConfiguration {
 		XPathFactory xFactory = XPathFactory.newInstance();
 		XPath xpath = xFactory.newXPath();
 		
-		dataFile = getDataFile(doc,xpath);
-		backupHosts = getBackupHosts(doc,xpath);
-		vmBootTime = getVmBootTime(doc,xpath);
-		injector = getInjector(doc,xpath);
+		setDataFile(doc,xpath);
+		setBackupHosts(doc,xpath);
+		setNumAffinities(doc,xpath);
+		setVmBootTime(doc,xpath);
+		setInjector(doc,xpath);
 	}
 
-	private File getDataFile(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
+	private void setDataFile(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
 		XPathExpression expr = xpath.compile("//dataFile/text()");
 		String dataFilePath = (String)expr.evaluate(doc,XPathConstants.STRING);
 		
 		dataFilePath = getClass().getResource(dataFilePath).getPath();
-		File dataFile = new File(dataFilePath);
+		dataFile = new File(dataFilePath);
 		
 		if (!dataFile.exists()) {
 			throw new ConfigurationException("Invalid data file");
@@ -92,10 +95,10 @@ public class TestConfiguration {
 			throw new ConfigurationException("No read permissions for data file");
 		}
 		
-		return dataFile;
+		pack = getBooleanFromXML("//pack/text()",doc,xpath);
 	}
 	
-	private List<Host> getBackupHosts(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
+	private void setBackupHosts(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
 
 		int numHosts = getNumberFromXML("//backupHosts/@num",doc,xpath);
 		int hostsCapacity = getNumberFromXML("//backupHosts/capacity/text()",doc,xpath);
@@ -104,11 +107,20 @@ public class TestConfiguration {
 		
 		hostBootTime = Period.seconds(bootTimeInSeconds);
 		
-		List<Host> backupHosts = new ArrayList<Host>(numHosts);
+		backupHosts = new ArrayList<Host>(numHosts);
 		for (int i = 0; i < numHosts; i++) {
 			backupHosts.add(new Host(i, hostsCapacity, aCost, hostBootTime));
 		}
-		return backupHosts;
+	}
+
+	private void setNumAffinities(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
+		numAffinities = getNumberFromXML("//test/numAffinities",doc,xpath);
+	}
+
+	private boolean getBooleanFromXML(String xpathStr, Document doc, XPath xpath) throws XPathExpressionException {
+		XPathExpression expr = xpath.compile(xpathStr);
+		String boolStr = (String)expr.evaluate(doc,XPathConstants.STRING); 
+		return Boolean.parseBoolean(boolStr);
 	}
 	
 	private double getDoubleFromXML(String xpathStr, Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
@@ -135,31 +147,28 @@ public class TestConfiguration {
 		}
 	}
 
-	private Period getVmBootTime(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
+	private void setVmBootTime(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
 		int vmBootTimeInSeconds = getNumberFromXML("//vmBootTime/text()", doc, xpath);
-		return Period.seconds(vmBootTimeInSeconds);
+		vmBootTime = Period.seconds(vmBootTimeInSeconds);
 	}
 	
-	private Injector getInjector(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
+	private void setInjector(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
 		XPathExpression expr = xpath.compile("//SLA/@type");
 		String slaType = (String)expr.evaluate(doc,XPathConstants.STRING);
-		AbstractModule productionModule = new ProductionGAPModule();
+		AbstractModule productionModule = new ProductionModule();
 		
 		if ("appEngine".equals(slaType))
-			return Guice.createInjector(productionModule, new AppEngineSLAModule());
-		
-		if ("linear".equals(slaType))
-			return Guice.createInjector(productionModule, new LinearSLAModule());
-		
-		if ("ha".equals(slaType)) 
-			return Guice.createInjector(productionModule, new HA_TableSLAModule());
-		
-		if ("custom".equals(slaType)) {
+			injector =  Guice.createInjector(productionModule, new AppEngineSLAModule());
+		else if ("linear".equals(slaType))
+			injector = Guice.createInjector(productionModule, new LinearSLAModule());
+		else if ("ha".equals(slaType)) 
+			injector = Guice.createInjector(productionModule, new HA_TableSLAModule());
+		else if ("custom".equals(slaType)) {
 			Map<Range,Double> table = getRanges(doc,xpath);
-			return Guice.createInjector(productionModule, new CustomSLAModule(table));
+			injector = Guice.createInjector(productionModule, new CustomSLAModule(table));
+		} else {
+			throw new ConfigurationException("Bad SLA type");
 		}
-			
-		throw new ConfigurationException("Bad SLA type");
 	}
 
 	private Map<Range,Double> getRanges(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
@@ -209,11 +218,19 @@ public class TestConfiguration {
 		return hostBootTime;
 	}
 
-	public Injector getInjector() {
+	public Injector getSlaInjector() {
 		return injector;
 	}
 
 	public double getHostActivationCost() {
 		return aCost;
+	}
+
+	public int getNumAffinities() {
+		return numAffinities;
+	}
+
+	public boolean pack() {
+		return pack;
 	}
 }

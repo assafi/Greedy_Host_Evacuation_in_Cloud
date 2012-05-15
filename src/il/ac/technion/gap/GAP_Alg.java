@@ -12,17 +12,29 @@ import il.ac.technion.knapsack.Bin;
 
 import java.util.List;
 
+import com.google.inject.Inject;
+
 public abstract class GAP_Alg {
+	
+	protected GapUtils gu;
+	
+	@Inject
+	public GAP_Alg(GapUtils gu) {
+		this.gu = gu;
+	}
 	
 	public abstract Bin[] solve(int[] binsCapacities, int[][] _itemSizes, double[][] _itemWeights);
 	
-	public void solve(List<Host> hosts, List<VM> vms) {
-		int[] binsCapacities = GapUtils.prepareCapacitiesVector(hosts);
-		int[][] itemSizes = GapUtils.prepareSizesMatrix(hosts.size(), vms);
-		double[][] itemCosts = GapUtils.prepareWeightsMatrix(hosts, vms);
+	public Bin[] solve(List<Host> hosts, List<VM> vms, boolean assign) {
+		int[] binsCapacities = gu.prepareCapacitiesVector(hosts);
+		int[][] itemSizes = gu.prepareSizesMatrix(hosts.size(), vms);
+		double[][] itemCosts = gu.prepareWeightsMatrix(hosts, vms);
 		
 		Bin[] answer = solve(binsCapacities,itemSizes,itemCosts);
 		
-		GapUtils.binsToAssignments(answer,hosts,vms);
+		if (assign)
+			gu.binsToAssignments(answer,hosts,vms);
+		
+		return answer;
 	}
 }

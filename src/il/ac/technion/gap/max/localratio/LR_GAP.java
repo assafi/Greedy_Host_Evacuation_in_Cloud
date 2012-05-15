@@ -7,6 +7,7 @@
 package il.ac.technion.gap.max.localratio;
 
 import il.ac.technion.gap.GAP_Alg;
+import il.ac.technion.gap.GapUtils;
 import il.ac.technion.knapsack.Bin;
 import il.ac.technion.knapsack.Item;
 import il.ac.technion.knapsack.KnapsackAlg;
@@ -29,7 +30,8 @@ public class LR_GAP extends GAP_Alg {
 	private KnapsackAlg knapsack;
 
 	@Inject
-	public LR_GAP(KnapsackAlg knapsackAlg) {
+	public LR_GAP(KnapsackAlg knapsackAlg, GapUtils gu) {
+		super(gu);
 		this.knapsack = knapsackAlg;
 	}
 

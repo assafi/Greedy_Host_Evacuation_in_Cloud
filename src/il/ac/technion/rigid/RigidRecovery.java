@@ -10,8 +10,6 @@ import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.datacenter.vm.VM;
 import il.ac.technion.gap.GAP_Alg;
-import il.ac.technion.gap.GapUtils;
-import il.ac.technion.knapsack.Bin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,7 @@ public class RigidRecovery {
 			filteredHosts.removeAll(pa.getHosts());
 			List<VM> recoveredVMs = pa.getVMs();
 			vmCount += recoveredVMs.size();
-			rp.add(solveGAP(filteredHosts,recoveredVMs),filteredHosts,recoveredVMs);
+			rp.add(gap.solve(filteredHosts,recoveredVMs,false),filteredHosts,recoveredVMs);
 		}
 		if (rp.recoveredVMsCount() == vmCount) {
 			rp.full();
@@ -53,18 +51,11 @@ public class RigidRecovery {
 			filteredHosts.remove(host);
 			List<VM> recoveredVMs = host.vms();
 			vmCount += recoveredVMs.size();
-			rp.add(solveGAP(filteredHosts,recoveredVMs),filteredHosts,recoveredVMs);
+			rp.add(gap.solve(filteredHosts,recoveredVMs,false),filteredHosts,recoveredVMs);
 		}
 		if (rp.recoveredVMsCount() == vmCount) {
 			rp.full();
 		}
 		return rp;
-	}
-
-	private Bin[] solveGAP(List<Host> filteredHosts, List<VM> vms) {
-		int[] binsCapacities = GapUtils.prepareCapacitiesVector(filteredHosts);
-		int[][] itemSizes = GapUtils.prepareSizesMatrix(filteredHosts.size(), vms);
-		double[][] itemPrices = GapUtils.prepareWeightsMatrix(filteredHosts, vms);
-		return gap.solve(binsCapacities, itemSizes, itemPrices);
 	}
 }

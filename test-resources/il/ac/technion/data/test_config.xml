@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test>
 	<dataFile>data1.csv</dataFile>
+	<pack>false</pack>
 	<backupHosts num="10">
 		<capacity>30</capacity>
 		<hostBootTime>180</hostBootTime>
 	</backupHosts>
 	<activationCost>800</activationCost>
 	<vmBootTime>240</vmBootTime>
+	<numAffinities>1</numAffinities>
 	<SLA type="custom">
 		<range>
 			<start>99.9999</start>

@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GapUtils {
-	public static double[][] prepareWeightsMatrix(List<Host> hosts, List<VM> vms) {
+	public double[][] prepareWeightsMatrix(List<Host> hosts, List<VM> vms) {
 		double[][] itemPrices = new double[hosts.size()][vms.size()];
 		for (int binIdx = 0; binIdx < hosts.size(); binIdx++) {
 			Host h = hosts.get(binIdx);
@@ -27,7 +27,7 @@ public class GapUtils {
 		return itemPrices;
 	}
 
-	public static int[][] prepareSizesMatrix(int numBins, List<VM> vms) {
+	public int[][] prepareSizesMatrix(int numBins, List<VM> vms) {
 		int[][] itemSizes = new int[numBins][vms.size()];
 		for (int binIdx = 0; binIdx < numBins; binIdx++) {
 			for (int vmIdx = 0; vmIdx < vms.size(); vmIdx++) {
@@ -37,7 +37,7 @@ public class GapUtils {
 		return itemSizes;
 	}
 
-	public static int[] prepareCapacitiesVector(List<Host> hosts) {
+	public int[] prepareCapacitiesVector(List<Host> hosts) {
 		int[] binsCapacities = new int[hosts.size()];
 		int i = 0;
 		Iterator<Host> iter = hosts.iterator();
@@ -47,7 +47,7 @@ public class GapUtils {
 		return binsCapacities;
 	}
 
-	public static void binsToAssignments(Bin[] bins, List<Host> hosts,
+	public void binsToAssignments(Bin[] bins, List<Host> hosts,
 			List<VM> vms) {
 		for (Bin bin : bins) {
 			Host h = hosts.get(bin.id);

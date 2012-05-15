@@ -7,6 +7,7 @@
 package il.ac.technion.gap.min.conversion;
 
 import il.ac.technion.gap.GAP_Alg;
+import il.ac.technion.gap.GapUtils;
 import il.ac.technion.knapsack.AssignedItem;
 import il.ac.technion.knapsack.Bin;
 import il.ac.technion.knapsack.Item;
@@ -21,7 +22,8 @@ public class Min_Max_GAP_Conversion extends GAP_Alg {
 	private final GAP_Alg maxGAP;
 
 	@Inject
-	public Min_Max_GAP_Conversion(@Named("Max GAP") GAP_Alg _maxGAP) {
+	public Min_Max_GAP_Conversion(@Named("Max GAP") GAP_Alg _maxGAP, GapUtils gu) {
+		super(gu);
 		this.maxGAP = _maxGAP;
 	}
 

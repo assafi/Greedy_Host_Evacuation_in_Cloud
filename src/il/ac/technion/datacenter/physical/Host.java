@@ -38,7 +38,7 @@ public class Host {
 	private final Period bootTime;
 
 	@XStreamAlias("activationCost")
-	final public double activationCost;
+	private double activationCost;
 
 	@XStreamOmitField
 	private int fHashCode = 0;
@@ -167,5 +167,9 @@ public class Host {
 			sb.append(vm + ", ");
 		}
 		return sb.toString();
+	}
+
+	public void setActivationCost(double ac) {
+		this.activationCost = ac;
 	}
 }

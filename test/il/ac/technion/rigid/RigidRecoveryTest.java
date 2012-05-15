@@ -14,7 +14,7 @@ import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.datacenter.sla.SLA;
 import il.ac.technion.datacenter.sla.guice.AppEngineSLAModule;
 import il.ac.technion.datacenter.vm.VM;
-import il.ac.technion.gap.guice.ProductionGAPModule;
+import il.ac.technion.gap.guice.ProductionModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import com.google.inject.Injector;
 
 public class RigidRecoveryTest {
 
-	private Injector inj = Guice.createInjector(new ProductionGAPModule(), new AppEngineSLAModule());
+	private Injector inj = Guice.createInjector(new ProductionModule(), new AppEngineSLAModule());
 	private RigidRecovery rr = inj.getInstance(RigidRecovery.class);
 	
 	private SLA sla1 = null;

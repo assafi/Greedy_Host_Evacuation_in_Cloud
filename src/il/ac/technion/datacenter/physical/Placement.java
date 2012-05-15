@@ -35,9 +35,17 @@ public class Placement {
 	}
 	
 	@Inject
-	public Placement(List<Host> hosts, List<VM> vms, @Named("Min GAP") GAP_Alg gap) {
+	public Placement(List<Host> hosts, List<VM> vms, @Named("Max GAP") GAP_Alg gap) {
 		this(hosts,vms);
-		gap.solve(hosts,vms);
+		gap.solve(hosts,vms,true);
+		for (Host host : hosts) {
+			if (host.usedCapacity() == 0) {
+				host.deactivate();
+			} else {
+				host.setActivationCost(0.0);
+				host.activate();
+			}
+		}
 	}
 	
 	@Override
@@ -85,7 +93,7 @@ public class Placement {
 	}
 
 	@Requires("n > 0")
-	public List<PhysicalAffinity> groupKHostsToNAffinities(String affinityName, int k, int n) {
+	public List<PhysicalAffinity> groupHostsToNAffinities(String affinityName, int n) {
 		List<PhysicalAffinity> la = new ArrayList<PhysicalAffinity>(n);
 		for (int i = 0; i < n; i++) {
 			la.add(new PhysicalAffinity(affinityName, i));
@@ -95,7 +103,7 @@ public class Placement {
 		la.add(backup);
 		
 		for (Host host : hosts) {
-			if (host.id() <= k) {
+			if (host.usedCapacity() != 0) {
 				host.join(la.get(host.id() % n));
 			} else {
 				host.join(backup);
@@ -103,5 +111,11 @@ public class Placement {
 		}
 		
 		return la;
+	}
+
+	public void activateAll() {
+		for (Host host : hosts) {
+			host.activate();
+		}
 	}
 }

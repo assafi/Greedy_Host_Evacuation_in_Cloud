@@ -37,7 +37,6 @@ public class RecoveryPlan {
 	public RecoveryPlan(List<Host> hosts) {
 		for (Host host : hosts) {
 			rp.put(host, new LinkedList<VM>());
-			updateHostStats(host);
 		}
 	}
 
@@ -48,6 +47,9 @@ public class RecoveryPlan {
 			List<VM> recoveredVMsToTarget = rp.get(target);
 			for (Item item : binsPackings[i].assignedItems()) {
 				VM recoveredVM = recoveredVMs.get(item.id);
+				if (recoveredVMsToTarget.size() == 0) {
+					updateHostStats(target); 
+				}
 				recoveredVMsToTarget.add(recoveredVM);
 				updateStats(target,recoveredVM);
 			}

@@ -8,7 +8,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-public class TestTestConfiguration {
+public class TestConfigurationTest {
 
 	@Test
 	public void testGoodPath() throws XPathExpressionException, IOException, ParserConfigurationException, SAXException, ConfigurationException {

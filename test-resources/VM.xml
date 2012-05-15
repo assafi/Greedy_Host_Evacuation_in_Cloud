@@ -109,7 +109,7 @@
   <type>
     <description>Small</description>
     <size>1</size>
-    <contractCost>20.0</contractCost>
+    <contractCost>276.0</contractCost>
     <defaultBootTime>
       <iType reference="../../../sla/billingPeriod/iType"/>
       <iValues>
