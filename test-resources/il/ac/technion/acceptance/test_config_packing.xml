@@ -2,13 +2,13 @@
 <test>
 	<dataFile>data1.csv</dataFile>
 	<pack>true</pack>
-	<backupHosts num="60">
+	<backupHosts num="100">
 		<capacity>30</capacity>
 		<activationCost>27</activationCost>
 		<hostBootTime>180</hostBootTime>
 	</backupHosts>
 	<vmBootTime>240</vmBootTime>
-	<numAffinities>4</numAffinities>
+	<numAffinities>3</numAffinities>
 	<SLA type="ha">
 		<range>
 			<start>99.9999</start>

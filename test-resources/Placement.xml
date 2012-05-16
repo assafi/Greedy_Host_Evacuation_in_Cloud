@@ -136,31 +136,6 @@
             <entry>
               <host>
                 <bin>
-                  <id>2</id>
-                  <capacity>512</capacity>
-                </bin>
-                <vms class="linked-list"/>
-                <active>false</active>
-                <bootTime>6000</bootTime>
-                <activationCost>10.0</activationCost>
-              </host>
-              <org.joda.time.Period>
-                <iType reference="../../../../sla/billingPeriod/iType"/>
-                <iValues>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>200</int>
-                  <int>0</int>
-                  <int>0</int>
-                </iValues>
-              </org.joda.time.Period>
-            </entry>
-            <entry>
-              <host>
-                <bin>
                   <id>3</id>
                   <capacity>256</capacity>
                 </bin>
@@ -194,6 +169,31 @@
                   <int>0</int>
                   <int>1</int>
                   <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                </iValues>
+              </org.joda.time.Period>
+            </entry>
+            <entry>
+              <host>
+                <bin>
+                  <id>2</id>
+                  <capacity>512</capacity>
+                </bin>
+                <vms class="linked-list"/>
+                <active>false</active>
+                <bootTime>6000</bootTime>
+                <activationCost>10.0</activationCost>
+              </host>
+              <org.joda.time.Period>
+                <iType reference="../../../../sla/billingPeriod/iType"/>
+                <iValues>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>200</int>
                   <int>0</int>
                   <int>0</int>
                 </iValues>
@@ -299,22 +299,6 @@
               </org.joda.time.Period>
             </entry>
             <entry>
-              <host reference="../../../../VM/bootTimes/entry[2]/host"/>
-              <org.joda.time.Period>
-                <iType reference="../../../../../VM/sla/billingPeriod/iType"/>
-                <iValues>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>0</int>
-                  <int>200</int>
-                  <int>0</int>
-                  <int>0</int>
-                </iValues>
-              </org.joda.time.Period>
-            </entry>
-            <entry>
               <host reference="../../../../.."/>
               <org.joda.time.Period>
                 <iType reference="../../../../../VM/sla/billingPeriod/iType"/>
@@ -325,6 +309,22 @@
                   <int>3</int>
                   <int>0</int>
                   <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                </iValues>
+              </org.joda.time.Period>
+            </entry>
+            <entry>
+              <host reference="../../../../VM/bootTimes/entry[3]/host"/>
+              <org.joda.time.Period>
+                <iType reference="../../../../../VM/sla/billingPeriod/iType"/>
+                <iValues>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>0</int>
+                  <int>200</int>
                   <int>0</int>
                   <int>0</int>
                 </iValues>
@@ -354,8 +354,8 @@
       <activationCost>0.0</activationCost>
     </host>
     <host reference="../host/vms/VM/bootTimes/entry[4]/host"/>
+    <host reference="../host/vms/VM/bootTimes/entry[3]/host"/>
     <host reference="../host/vms/VM/bootTimes/entry/host"/>
-    <host reference="../host/vms/VM/bootTimes/entry[2]/host"/>
   </hosts>
   <vms>
     <VM reference="../../hosts/host/vms/VM"/>

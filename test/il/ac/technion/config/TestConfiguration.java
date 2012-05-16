@@ -109,7 +109,7 @@ public class TestConfiguration {
 		
 		backupHosts = new ArrayList<Host>(numHosts);
 		for (int i = 0; i < numHosts; i++) {
-			backupHosts.add(new Host(i, hostsCapacity, aCost, hostBootTime));
+			backupHosts.add(new Host(i, hostsCapacity, aCost * hostsCapacity , hostBootTime));
 		}
 	}
 
