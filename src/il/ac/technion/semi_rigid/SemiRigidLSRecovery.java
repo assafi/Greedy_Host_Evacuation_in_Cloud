@@ -7,12 +7,15 @@
 package il.ac.technion.semi_rigid;
 
 import il.ac.technion.datacenter.physical.Host;
+import il.ac.technion.datacenter.physical.HostConfig;
 import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.rigid.RecoveryPlan;
 import il.ac.technion.rigid.RigidRecovery;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.inject.Inject;
 
@@ -36,7 +39,11 @@ public class SemiRigidLSRecovery {
 		do {
 			stop = true;
 			Host nextActive = null;
+			Set<HostConfig> triedHostsConfigs = new HashSet<HostConfig>(); // Optimization 
 			for (Host host : inactiveHosts) {
+				HostConfig hc = host.getConfig();
+				if (triedHostsConfigs.contains(hc)) continue;
+				triedHostsConfigs.add(hc);
 				host.activate();
 				RecoveryPlan tempRP = rr.affinityRecovery(pal);
 				double tempCost = tempRP.cost();

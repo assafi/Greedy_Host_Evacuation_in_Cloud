@@ -115,6 +115,10 @@ public class Host {
 	public int usedCapacity() {
 		return bin.capacity - freeCapacity();
 	}
+	
+	public int capacity() {
+		return bin.capacity;
+	}
 
 	@Override
 	public int hashCode() {
@@ -171,5 +175,9 @@ public class Host {
 
 	public void setActivationCost(double ac) {
 		this.activationCost = ac;
+	}
+
+	public HostConfig getConfig() {
+		return new HostConfig(capacity(),freeCapacity(),activationCost,bootTime);
 	}
 }
