@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test>
+	<dataFile>data1.csv</dataFile>
+	<pack>false</pack>
+	<backupHosts num="5">
+		<capacity>254</capacity>
+		<activationCost>5000</activationCost>
+		<hostBootTime>300</hostBootTime>
+	</backupHosts>
+	<numAffinities>4</numAffinities>
+	<vmBootTime>240</vmBootTime>
+	<SLA type="linear" />
+</test>
