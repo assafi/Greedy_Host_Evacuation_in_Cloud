@@ -1,0 +1,8 @@
+#Tue Mar 20 11:56:42 IST 2012
+eclipse.preferences.version=1
+org.eclipse.jdt.apt.aptEnabled=true
+org.eclipse.jdt.apt.genSrcDir=.apt_generated
+org.eclipse.jdt.apt.processorOptions/com.google.java.contract.classoutput=%PROJECT.DIR%/bin
+org.eclipse.jdt.apt.processorOptions/com.google.java.contract.classpath=%PROJECT.DIR%/lib/cofoja-1.0-r139.jar
+org.eclipse.jdt.apt.processorOptions/com.google.java.contract.sourcepath=%PROJECT.DIR%/src
+org.eclipse.jdt.apt.reconcileEnabled=true
