@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.inject.Injector;
@@ -35,41 +37,56 @@ public class AbstractAcceptanceTest {
 	private static Logger logger = Logger.getLogger(AbstractAcceptanceTest.class);
 
 	private DataConverter dc = new DataCoverterImpl();
-	private final TestConfiguration tConfig;
+	private TestConfiguration tConfig;
 
 	private Injector inj = null;
 	private SemiRigidLSRecovery srr = null;
 	private RigidRecovery rr = null;
+	
+	private Placement p = null;
 
-	public AbstractAcceptanceTest(TestConfiguration tConfig) {
+	public AbstractAcceptanceTest(TestConfiguration tConfig) throws IOException, DataException {
 		this.tConfig = tConfig;
+		this.p = dc.convert(tConfig);
 		this.inj = tConfig.getSlaInjector();
 		this.srr = inj.getInstance(SemiRigidLSRecovery.class);
 		this.rr = inj.getInstance(RigidRecovery.class);
 	}
+	
+	@After
+	public void tearDown() {
+		p.reset(); // All tests will use the same original placement
+	}
 
+	/**
+	 * Host recovery that can activate additional hosts.
+	 * @throws IOException
+	 * @throws DataException
+	 */
 //	@Ignore
 	@Test
 	public void testSemiRigidHostRecovery() throws IOException, DataException {
-		logger.info(delim + "===== Semi-Rigid Host Recovery =====");
-		Placement p = dc.convert(tConfig);
-		// logger.info("===== Placement =====");
-		// logger.info(p);
+		logger.info(delim + "===== Hosts Recovery with Backup Hosts Activation =====");
 		RecoveryPlan rp = srr.hostsRecovery(p.hosts());
 		logger.info(delim + rp.summary());
 		// logger.info(delim + rp);
 	}
 
+	/**
+	 * Rack recovery that can activate additional hosts. 
+	 * The size of a rack is determine by the number of racks and the number of hosts.
+	 * @throws IOException
+	 * @throws DataException
+	 */
 //	@Ignore
 	@Test
 	public void testSemiRigidAffinityOfK() throws IOException, DataException {
-		logger.info(delim + "===== Semi-Rigid Rack Recovery =====");
-		Placement p = dc.convert(tConfig);
-		 logger.info("===== Placement =====");
-		 logger.info(p);
+		logger.info(delim + "===== Rack Recovery with Backup Hosts Activation =====");
 
 		List<PhysicalAffinity> la = p.groupHostsToNAffinities("Rack",
 				tConfig.getNumAffinities());
+		int maxNumberOfHostsInRack = la.get(0).size();
+		logger.info("Max number of hosts in rack: " + maxNumberOfHostsInRack);
 		updateExpensiveAffinities(la,tConfig);
 
 		RecoveryPlan rp = srr.affinityRecovery(la);
@@ -77,17 +94,23 @@ public class AbstractAcceptanceTest {
 		 logger.info(delim + rp);
 	}
 
+	/**
+	 * Rack recovery that will not activate additional hosts. 
+	 * All backup hosts are powered off, and recovery will save their activation cost  
+	 * but will pay more for the VM recovery.
+	 * The size of a rack is determine by the number of racks and the number of hosts.
+	 * @throws IOException
+	 * @throws DataException
+	 */
 //	@Ignore
 	@Test
 	public void testInactiveBackupsRigidAffinityOfK() throws IOException,
 			DataException {
-		logger.info(delim + "===== Rigid Inactive Rack Recovery =====");
-		Placement p = dc.convert(tConfig);
-		// logger.info("===== Placement =====");
-		// logger.info(p);
-
+		logger.info(delim + "===== Rack Recovery with Inactive Backup Hosts =====");
 		List<PhysicalAffinity> la = p.groupHostsToNAffinities("Rack",
 				tConfig.getNumAffinities());
+		int maxNumberOfHostsInRack = la.get(0).size();
+		logger.info("Max number of hosts in rack: " + maxNumberOfHostsInRack);
 		updateExpensiveAffinities(la,tConfig);
 
 		RecoveryPlan rp = rr.affinityRecovery(la);
@@ -95,15 +118,22 @@ public class AbstractAcceptanceTest {
 		 logger.info(delim + rp);
 	}
 
+	/**
+	 * Rack recovery that uses only active backup hosts.
+	 * As such, their activation cost is paid but the recovery itself is quicker 
+	 * and thus cheaper. 
+	 * The size of a rack is determine by the number of racks and the number of hosts.
+	 * @throws IOException
+	 * @throws DataException
+	 */
 //	@Ignore
 	@Test
 	public void testActiveBackupsRigidAffinityOfK() throws IOException,
 			DataException {
-		logger.info(delim + "===== Rigid Active Rack Recovery =====");
-		Placement p = dc.convert(tConfig);
+		logger.info(delim + "===== Rack Recovery with Active Backup Hosts =====");
 		p.activateAll();
-//		logger.info("===== Placement =====");
-//		logger.info(p);
+		int maxNumberOfHostsInRack = (int)Math.ceil((double)p.numHosts() / tConfig.getNumAffinities());
+		logger.info("Max number of hosts in rack: " + maxNumberOfHostsInRack);
 
 		List<PhysicalAffinity> la = p.groupHostsToNAffinities("Rack",
 				tConfig.getNumAffinities());
@@ -114,13 +144,12 @@ public class AbstractAcceptanceTest {
 		 logger.info(delim + rp);
 	}
 	
-//	@Ignore
+	@Ignore
 	@Test
 	public void test2PriceModelsPacking_ActiveRecovery() throws IOException,
 			DataException {
 		logger.info(delim + "===== Rigid Active Rack Recovery =====");
 		logger.info("***** Compact Expensive Packing *****");
-		Placement p = dc.convert(tConfig);
 		p.activateAll();
 		logger.info("===== Placement =====");
 		logger.info(p);
@@ -145,12 +174,12 @@ public class AbstractAcceptanceTest {
 	  logger.info(delim + rp);
 	}
 	
+	@Ignore
 	@Test
 	public void test2PriceModelsPacking_SemiRigidRecovery() throws IOException,
 			DataException {
 		logger.info(delim + "===== Semi Rigid Rack Recovery =====");
 		logger.info("***** Compact Expensive Packing *****");
-		Placement p = dc.convert(tConfig);
 		logger.info("===== Placement =====");
 		logger.info(p);
 

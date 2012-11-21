@@ -6,19 +6,19 @@
  */
 package il.ac.technion.datacenter.sla;
 
-import il.ac.technion.datacenter.sla.Range;
-import il.ac.technion.datacenter.sla.TableSLA;
+import il.ac.technion.misc.PeriodConverter;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.joda.time.Period;
+import org.junit.Assert;
 import org.junit.Test;
 
 
 public class TableSLATest {
 	
-	private Period p = new Period(100);
+	private Period p = new Period(1,0,0,0,0,0,0,0); // one year
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testEmptyPeriod() {
@@ -74,11 +74,35 @@ public class TableSLATest {
 	
 	@Test
 	public void testGoogleAppEngineSLA() {
-		Map<Range,Double> badTable = new HashMap<Range, Double>();
-		badTable.put(new Range(99.95,100.0), 0.0);
-		badTable.put(new Range(99.0,99.95), 0.1);
-		badTable.put(new Range(95.0,99.0), 0.25);
-		badTable.put(new Range(0.0,95.0), 0.5);
-		new TableSLA(p,badTable);
+		Map<Range,Double> goodTable = new HashMap<Range, Double>();
+		goodTable.put(new Range(99.95,100.0), 0.0);
+		goodTable.put(new Range(99.0,99.95), 0.1);
+		goodTable.put(new Range(95.0,99.0), 0.25);
+		goodTable.put(new Range(0.0,95.0), 0.5);
+		new TableSLA(p,goodTable);
+	}
+	
+	@Test
+	public void testRandomDowntime_noNoise() {
+		Map<Range,Double> slaTable = new HashMap<Range, Double>();
+		slaTable.put(new Range(99.95,100.0), 0.0);
+		slaTable.put(new Range(99.0,99.95), 0.1);
+		slaTable.put(new Range(95.0,99.0), 0.25);
+		slaTable.put(new Range(0.0,95.0), 0.5);
+		SLA sla = new TableSLA(p,slaTable);
+		Period downtime = sla.addRandomDowntime(0);
+		Assert.assertTrue(PeriodConverter.toMillis(downtime) <= 0.0005 * PeriodConverter.toMillis(p));
+	}
+	
+	@Test
+	public void testRandomDowntime_maxNoise() {
+		Map<Range,Double> slaTable = new HashMap<Range, Double>();
+		slaTable.put(new Range(99.95,100.0), 0.0);
+		slaTable.put(new Range(99.0,99.95), 0.1);
+		slaTable.put(new Range(95.0,99.0), 0.25);
+		slaTable.put(new Range(0.0,95.0), 0.5);
+		SLA sla = new TableSLA(p,slaTable);
+		Period downtime = sla.addRandomDowntime(1);
+		Assert.assertTrue(PeriodConverter.toMillis(downtime) >= 0.05 * PeriodConverter.toMillis(p));
 	}
 }

@@ -15,6 +15,6 @@ public class MediumVmDescriptionModule extends AbstractModule {
 	
 	@Provides
 	public VmDesciption getVmd() {
-		return new VmDesciption("Medium", 2,Period.minutes(4), 552.0);
+		return new VmDesciption("Medium", 2,Period.minutes(4), SmallVmDescriptionModule.BASE * 2);
 	}
 }

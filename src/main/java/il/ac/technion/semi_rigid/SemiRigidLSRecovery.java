@@ -19,20 +19,25 @@ import java.util.Set;
 
 import com.google.inject.Inject;
 
+/**
+ * VM fault recovery with host activations.
+ * The LS algorithm iteratively activates rigid recovery algorithm,
+ * and looks for the most beneficial host to activate at every step. 
+ */
 public class SemiRigidLSRecovery {
 
-	private RigidRecovery rr = null;
+	private RigidRecovery rigidRecovery = null;
 	
 	@Inject
 	public SemiRigidLSRecovery(RigidRecovery rr) {
-		this.rr = rr;
+		this.rigidRecovery = rr;
 	}
 	
 	public RecoveryPlan affinityRecovery(List<PhysicalAffinity> pal) {
 		List<Host> hosts = PhysicalAffinity.extractHosts(pal);
-		List<Host> inactiveHosts = sieveInactive(hosts);
+		List<Host> inactiveHosts = sieveActive(hosts);
 		
-		RecoveryPlan $ = rr.affinityRecovery(pal);
+		RecoveryPlan $ = rigidRecovery.affinityRecovery(pal);
 		double $cost = cost($,hosts);
 		boolean stop;
 		
@@ -45,7 +50,7 @@ public class SemiRigidLSRecovery {
 				if (triedHostsConfigs.contains(hc)) continue;
 				triedHostsConfigs.add(hc);
 				host.activate();
-				RecoveryPlan tempRP = rr.affinityRecovery(pal);
+				RecoveryPlan tempRP = rigidRecovery.affinityRecovery(pal);
 				double tempCost = tempRP.cost();
 				if (tempCost < $cost) {
 					stop = false;
@@ -64,9 +69,9 @@ public class SemiRigidLSRecovery {
 	}
 	
 	public RecoveryPlan hostsRecovery(List<Host> hosts) {
-		List<Host> inactiveHosts = sieveInactive(hosts);
+		List<Host> inactiveHosts = sieveActive(hosts);
 		
-		RecoveryPlan $ = rr.hostsRecovery(hosts);
+		RecoveryPlan $ = rigidRecovery.hostsRecovery(hosts);
 		double $cost = cost($,hosts);
 		boolean stop;
 		
@@ -75,7 +80,7 @@ public class SemiRigidLSRecovery {
 			Host nextActive = null;
 			for (Host host : inactiveHosts) {
 				host.activate();
-				RecoveryPlan tempRP = rr.hostsRecovery(hosts);
+				RecoveryPlan tempRP = rigidRecovery.hostsRecovery(hosts);
 				double tempCost = tempRP.cost();
 				if (tempCost < $cost) {
 					stop = false;
@@ -93,7 +98,12 @@ public class SemiRigidLSRecovery {
 		return $;
 	}
 
-	private List<Host> sieveInactive(List<Host> hosts) {
+	/**
+	 * Filter out all active hosts from the given list. Maintains order.
+	 * @param hosts A list of hosts
+	 * @return A list of inactive hosts. 
+	 */
+	private List<Host> sieveActive(List<Host> hosts) {
 		List<Host> $ = new ArrayList<Host>(hosts.size());
 		for (Host h : hosts) {
 			if (!h.isActive())

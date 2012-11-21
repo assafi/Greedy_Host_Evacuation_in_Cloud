@@ -15,7 +15,7 @@ public abstract class Affinity<T> {
 	public final String type;
 	public final int id;
 	
-	private List<T> hosts = new LinkedList<T>();
+	private List<T> elements = new LinkedList<T>();
 	
 	protected Affinity(String type, int id) {
 		this.type = type;
@@ -23,14 +23,18 @@ public abstract class Affinity<T> {
 	}
 	
 	protected List<T> getElements() {
-		return new ArrayList<T>(hosts);
+		return new ArrayList<T>(elements);
 	}
 	
 	public boolean join(T h) {
-		return hosts.add(h);
+		return elements.add(h);
 	}
 	
 	public boolean leave(T h) {
-		return hosts.remove(h);
+		return elements.remove(h);
+	}
+	
+	public int size() {
+		return elements.size();
 	}
 }

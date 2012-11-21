@@ -40,7 +40,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>il.ac.technion.main.Main</mainClass>
+                        <mainClass>il.ac.technion.experiments.ExperimentsRunner</mainClass>
                     </manifest>
                 </archive>
                 <descriptorRefs>

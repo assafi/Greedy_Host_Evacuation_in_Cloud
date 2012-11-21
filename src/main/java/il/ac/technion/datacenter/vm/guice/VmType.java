@@ -9,7 +9,7 @@ import il.ac.technion.datacenter.vm.VmDesciption;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-public enum VmType {
+public enum VmType {	
 	SMALL {
 		private Injector vmdInj = Guice.createInjector(new SmallVmDescriptionModule());
 

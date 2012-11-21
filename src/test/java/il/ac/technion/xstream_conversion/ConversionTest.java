@@ -24,12 +24,12 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 public abstract class ConversionTest {
 
 	private Object subject;
-	private String xmlFile = "test-resources//";
+	private String xmlFile;
 	
 	@Before
 	public void init() {
 		this.subject = getSubject();
-		xmlFile += subject.getClass().getSimpleName() + ".xml";
+		xmlFile += subject.getClass().getCanonicalName().replace(',', '/') + ".xml";
 	}
 	
 	protected abstract Object getSubject();
@@ -38,7 +38,6 @@ public abstract class ConversionTest {
 	public void conversionTest() throws IOException {
 		XStream xStream = new XStream(new DomDriver());
 		xStream.autodetectAnnotations(true);
-
 
 		xStream.toXML(subject, new FileWriter(xmlFile));
 		

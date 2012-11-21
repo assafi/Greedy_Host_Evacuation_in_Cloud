@@ -15,6 +15,6 @@ public class LargeVmDescriptionModule extends AbstractModule {
 	
 	@Provides 
 	VmDesciption getVmd() {
-		return new VmDesciption("Large", 6, Period.minutes(5), 1104.0);
+		return new VmDesciption("Large", 6, Period.minutes(5), SmallVmDescriptionModule.BASE * 4);
 	}
 }

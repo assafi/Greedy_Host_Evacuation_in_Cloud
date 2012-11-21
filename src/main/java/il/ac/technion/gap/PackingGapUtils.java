@@ -19,7 +19,8 @@ public class PackingGapUtils extends GapUtils {
 		for (int binIdx = 0; binIdx < hosts.size(); binIdx++) {
 			for (int vmIdx = 0; vmIdx < vms.size(); vmIdx++) {
 				VM vm = vms.get(vmIdx);
-				itemPrices[binIdx][vmIdx] = (double)vm.size(); // This is used for packing scenarios
+			  // This is used for packing scenarios where the item cost is it's size
+				itemPrices[binIdx][vmIdx] = (double)vm.size(); 
 			}
 		}
 		return itemPrices;

@@ -17,6 +17,9 @@ import java.util.List;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+/**
+ * VM fault recovery without host activation
+ */
 public class RigidRecovery {
 
 	private GAP_Alg gap;

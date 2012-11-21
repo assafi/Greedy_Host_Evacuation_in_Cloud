@@ -6,7 +6,7 @@
  */
 package il.ac.technion.misc.xstream_converters;
 
-import il.ac.technion.misc.PeriodCoverter;
+import il.ac.technion.misc.PeriodConverter;
 
 import org.joda.time.Period;
 
@@ -27,7 +27,7 @@ public class SimplePeriodConverter implements Converter {
 	public void marshal(Object source, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
 		Period bootTime = (Period)source;
-		writer.setValue(Long.toString(PeriodCoverter.toSeconds(bootTime)));
+		writer.setValue(Long.toString(PeriodConverter.toSeconds(bootTime)));
 	}
 
 	@Override

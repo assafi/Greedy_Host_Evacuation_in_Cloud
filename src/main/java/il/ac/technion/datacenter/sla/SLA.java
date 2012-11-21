@@ -6,7 +6,7 @@
  */
 package il.ac.technion.datacenter.sla;
 
-import il.ac.technion.misc.PeriodCoverter;
+import il.ac.technion.misc.PeriodConverter;
 
 import org.joda.time.Period;
 
@@ -60,8 +60,8 @@ public abstract class SLA {
 	}
 	
 	public double availability(Period downTime) {
-		return ((double)PeriodCoverter.toSeconds(billingPeriod.minus(totalDownTime.plus(downTime))) / 
-				PeriodCoverter.toSeconds(billingPeriod)) * 100.0;
+		return ((double)PeriodConverter.toSeconds(billingPeriod.minus(totalDownTime.plus(downTime))) / 
+				PeriodConverter.toSeconds(billingPeriod)) * 100.0;
 	}
 	
 	/**
@@ -102,9 +102,18 @@ public abstract class SLA {
 	
 	@SuppressWarnings("unused")
 	private boolean zeroCostCheck(Period estimatedDownTime, double result) {
-		if (PeriodCoverter.toMillis(totalDownTime.plus(estimatedDownTime)) < 
-					(100.0-availabilityContract())*PeriodCoverter.toMillis(billingPeriod)) 
+		if (PeriodConverter.toMillis(totalDownTime.plus(estimatedDownTime)) < 
+					(100.0-availabilityContract())*PeriodConverter.toMillis(billingPeriod)) 
 			return result == 0.0;
 		return true;
 	}
+	
+	/**
+	 * Adds a random generated downtime period, based on the <code>noise</code> parameter.
+	 * The implementation of the random period generation is SLA-Implementation dependent. 
+	 * @param noise A general parameter used by the implementations to influence on the 
+	 * randomnece of the downtime period. 
+	 * @return The downtime period added to the SLA.
+	 */
+	public abstract Period addRandomDowntime(double noise);
 }

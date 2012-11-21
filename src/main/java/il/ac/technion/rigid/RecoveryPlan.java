@@ -116,6 +116,21 @@ public class RecoveryPlan {
 		return sb.toString();
 	}
 	
+	/**
+	 * @return
+	 */
+	public String csvReport() {
+		String $ = recoveryCost + "," +
+				activationCost + "," +
+				totalCost + "," + 
+				recoveredVMsCount + "," +
+				rp.keySet().size() + "," +
+				activeHostCount() + "," +
+				inactiveHostCount() + "," +
+				(isComplete() ? "Yes" : "No");
+		return $;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(summary());

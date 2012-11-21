@@ -6,7 +6,11 @@
  */
 package il.ac.technion.datacenter.sla;
 
+import il.ac.technion.misc.PeriodConverter;
+
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.joda.time.Period;
@@ -23,6 +27,7 @@ public class TableSLA extends SLA {
 
 	private Map<Range, Double> compensationTable;
 	private double contractAvailability;
+	private static Random coin = new Random(System.currentTimeMillis());
 
 	@Requires({
 		"billingPeriod != null", 
@@ -132,5 +137,96 @@ public class TableSLA extends SLA {
 				|| sla.contractAvailability != this.contractAvailability)
 			return false;
 		return true;
+	}
+
+	@Override
+	@Requires("old(noise) <= 1.0 && old(noise) >= 0")
+	public Period addRandomDowntime(double noise) {
+		Iterator<Range> iter = new RangeIterator(compensationTable.keySet());
+		Range r = iter.next();
+		while (iter.hasNext()) {
+			if (coin.nextDouble() >= noise) 
+				break;
+			r = iter.next();
+		}
+		double downTimePerc = 100.0 - (coin.nextDouble()*r.size + r.left);
+		long downtimeInMillis = (long) (PeriodConverter.toMillis(billingPeriod) * (downTimePerc / 100.0));
+		Period $ = new Period(downtimeInMillis);
+		reportDownTime($);
+		return $;
+	}
+	
+	/**
+	 * Range iterator, starting from the highest range to the lower.
+	 * Ranges must be mutually exclusive and complete.
+	 */
+	private class RangeIterator implements Iterator<Range> {
+		
+		private Set<Range> ranges;
+		private Range current = null;
+		private Range next = null;
+		
+		public RangeIterator(Set<Range> ranges) {
+			this.ranges = ranges;
+			next = getHighestRange();
+		}
+		
+		private Range getLowestRange() {
+			Range $ = null;
+			for (Range range : ranges) {
+				if ($ == null || $.left > range.left)
+					$ = range;
+			}
+			return $;
+		}
+		
+		private Range getHighestRange() {
+			Range $ = null;
+			for (Range range : ranges) {
+				if ($ == null || $.right < range.right)
+					$ = range;
+			}
+			return $;
+		}
+		
+		private Range findRange(double value) {
+			for (Range range : ranges) {
+				if (range.inRange(value)) {
+					return range;
+				}
+			}
+			return null;
+		}
+		
+		private int rangeCount(double value) {
+			int count = 0;
+			for (Range range : ranges) {
+				if (range.inRange(value)) {
+					++count;
+				}
+			}
+			return count;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return next != null;
+		}
+
+		@Override
+		public Range next() {
+			current = next;
+			if (next != null) {
+				next = findRange(current.left);
+			}
+			return current;
+		}
+
+		@Override
+		public void remove() {
+			if (current != null) {
+				ranges.remove(current);	
+			}
+		}
 	}
 }

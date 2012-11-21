@@ -28,8 +28,8 @@ public class ProfitsMatrix {
 	 *          pm.firstColumnIndex column.
 	 */
 	@Requires({
-		"pm != null",
-		"chosenIndexes != null",
+		"old(pm) != null",
+		"old(chosenIndexes) != null",
 		"!pm.lastColumn()",
 		})
 	private ProfitsMatrix(ProfitsMatrix pm, Collection<Integer> chosenIndexes) {
@@ -54,7 +54,7 @@ public class ProfitsMatrix {
 	}
 
 	public boolean lastColumn() {
-		return profits.length == 1;
+		return profits.length <= 1;
 	}
 
 	@Override

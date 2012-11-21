@@ -10,6 +10,7 @@ import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.sla.SLA;
 import il.ac.technion.misc.HashCodeUtil;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,6 +92,7 @@ public class VM {
 	
 	@Override
 	public String toString() {
-		return "VM#" + id + " [" + type.size + "]";
+		String avStr = new DecimalFormat("#.#####").format(sla.availability()); 
+		return "VM#" + id + " [ Size: " + type.size + ", Availability: " + avStr + "]";
 	}
 }

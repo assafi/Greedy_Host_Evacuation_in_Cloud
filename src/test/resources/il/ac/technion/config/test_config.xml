@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test>
-	<dataFile>data1.csv</dataFile>
-	<pack>false</pack>
-	<backupHosts num="10">
+	<dataFile>data1_small_backup.csv</dataFile>
+	<pack expensive="true" numExpensiveRacks="1" distributeExpensive="false">true</pack>
+	<backupHosts num="60">
 		<capacity>30</capacity>
+		<activationCost>2000</activationCost>
+		<activationCostPerSize>67.0</activationCostPerSize>
 		<hostBootTime>180</hostBootTime>
 	</backupHosts>
-	<activationCost>800</activationCost>
 	<vmBootTime>240</vmBootTime>
-	<numAffinities>1</numAffinities>
-	<SLA type="custom">
+	<numAffinities>10</numAffinities>
+	<SLA type="linear">
 		<range>
 			<start>99.9999</start>
 			<end>100.0</end>

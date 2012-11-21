@@ -7,6 +7,7 @@
 package il.ac.technion.data;
 
 import il.ac.technion.config.TestConfiguration;
+import il.ac.technion.config.TestConfiguration.DowntimeType;
 import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.Placement;
 import il.ac.technion.datacenter.physical.guice.PlacementModule;
@@ -46,6 +47,10 @@ public class DataCoverterImpl extends DataConverter {
 		int hostID = 0;
 		List<Host> hosts = new LinkedList<Host>();
 		List<VM> vms = new LinkedList<VM>();
+		if (!scanner.hasNext()) {
+			throw new DataException("Invalid data file. Can't read lines.");
+		}
+			
 		scanner.nextLine();
 		VmType.configure(tConfig);
 
@@ -66,10 +71,10 @@ public class DataCoverterImpl extends DataConverter {
 			int numMedium = parsedData[2];
 			int numLarge = parsedData[3];
 
-			double activationCost = tConfig.getHostActivationCost();
+			double activationCost = tConfig.getHostActivationCost(hostCapacity);
 			Period bootTime = tConfig.getHostBootTime();
 
-			Host host = new Host(hostID++, hostCapacity, activationCost * hostCapacity, bootTime);
+			Host host = new Host(hostID++, hostCapacity, activationCost, bootTime);
 
 			if (activationCost == 0.0) {
 				host.activate();
@@ -84,6 +89,9 @@ public class DataCoverterImpl extends DataConverter {
 
 			for (VM vm : newVms) {
 				vm.addBootTime(host, tConfig.getVmBootTime());
+				if (tConfig.downtimeType() == DowntimeType.Random) {
+					vm.sla.addRandomDowntime(tConfig.downtimeNoise());
+				}
 			}
 			vms.addAll(newVms);
 		}
@@ -133,7 +141,7 @@ public class DataCoverterImpl extends DataConverter {
 
 			double activationCost = 0.0;
 			if (numSmall + numMedium + numLarge == 0) {
-				activationCost = tConfig.getHostActivationCost();
+				activationCost = tConfig.getHostActivationCost(hostCapacity);
 			}
 
 			Period bootTime = tConfig.getHostBootTime();

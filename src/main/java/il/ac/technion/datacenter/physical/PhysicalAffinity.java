@@ -39,6 +39,10 @@ public class PhysicalAffinity extends Affinity<Host>{
 		return vms;
 	}
 	
+	/**
+	 * @param paList A list of physical affinities.  
+	 * @return A list of all hosts residing in the physical affinities list.
+	 */
 	public static List<Host> extractHosts(Collection<PhysicalAffinity> paList) {
 		List<Host> hosts = new LinkedList<Host>();
 		for (PhysicalAffinity pa : paList) {

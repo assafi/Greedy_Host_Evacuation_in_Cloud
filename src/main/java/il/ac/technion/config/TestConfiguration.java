@@ -16,6 +16,7 @@ import il.ac.technion.gap.guice.ProductionModule;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,7 @@ public class TestConfiguration {
 	private List<Host> backupHosts;
 	private Period vmBootTime;
 	private Period hostBootTime;
-	private Injector injector;
+	private Injector injector; 
 	private int numAffinities;
 	private boolean pack;
 	private double baseCost;
@@ -55,9 +56,18 @@ public class TestConfiguration {
 	private boolean distributedExpensive;
 	private int numExpensiveVMs;
 	private boolean expensive;
+	private DowntimeType downtimeType;
+	private double downtimeNoise;
+	
+	public enum DowntimeType {
+		Fixed, Random
+	}
 
 	public TestConfiguration(String configFilePath) throws IOException, XPathExpressionException, ParserConfigurationException, SAXException, ConfigurationException {
-		File cFile = new File(configFilePath);
+		this(new File(configFilePath));
+	}
+	
+	public TestConfiguration(File cFile) throws IOException, XPathExpressionException, ParserConfigurationException, SAXException, ConfigurationException {
 		if (!cFile.exists()) {
 			throw new IOException("File not found");
 		}
@@ -82,6 +92,7 @@ public class TestConfiguration {
 		setBackupHosts(doc,xpath);
 		setNumAffinities(doc,xpath);
 		setVmBootTime(doc,xpath);
+		setVmDowntime(doc,xpath);
 		setInjector(doc,xpath);
 	}
 
@@ -89,11 +100,17 @@ public class TestConfiguration {
 		XPathExpression expr = xpath.compile("//dataFile/text()");
 		String dataFilePath = (String)expr.evaluate(doc,XPathConstants.STRING);
 		
-		dataFilePath = getClass().getResource(dataFilePath).getPath();
 		dataFile = new File(dataFilePath);
-		
 		if (!dataFile.exists()) {
-			throw new ConfigurationException("Invalid data file");
+			/*
+			 * Trying relative path to class
+			 */
+			URL dataFileURL = getClass().getResource(dataFilePath);
+			if (dataFileURL == null) {
+				throw new ConfigurationException("Invalid data file: " + dataFilePath);
+			}
+			dataFilePath = dataFileURL.getPath();
+			dataFile = new File(dataFilePath);
 		}
 		
 		if (!dataFile.canRead()) {
@@ -110,6 +127,27 @@ public class TestConfiguration {
 				numExpensiveRacks = getNumberFromXML("//pack/@numExpensiveRacks",doc,xpath);
 			}
 		}
+	}
+
+	private void setVmDowntime(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
+		if (!nodeExists(doc, xpath, "//downtime")) {
+			this.downtimeType = DowntimeType.Fixed;
+			this.downtimeNoise = 0;
+			return;
+		}
+		this.downtimeType = getBooleanFromXML("//downtime/@random",doc,xpath) ? DowntimeType.Random : DowntimeType.Fixed;  
+		this.downtimeNoise = getDoubleFromXML("//downtime/noise", doc, xpath);
+		if (downtimeNoise < 0 || downtimeNoise > 1) {
+			throw new ConfigurationException("Donwtime noise (" + downtimeNoise + ") must be in [0,1] range");
+		}
+	}
+	
+	private boolean nodeExists(Document doc, XPath xpath, String nodePath) throws XPathExpressionException {
+		if (null == nodePath || "".equals(nodePath)) {
+			return false;
+		}
+		XPathExpression expr = xpath.compile("boolean(" + nodePath + ")");
+		return (Boolean)expr.evaluate(doc, XPathConstants.BOOLEAN);
 	}
 	
 	private void setBackupHosts(Document doc, XPath xpath) throws XPathExpressionException, ConfigurationException {
@@ -263,5 +301,13 @@ public class TestConfiguration {
 
 	public boolean expensiveProcessing() {
 		return expensive;
+	}
+	
+	public DowntimeType downtimeType() {
+		return downtimeType;
+	}
+	
+	public double downtimeNoise() {
+		return downtimeNoise;
 	}
 }

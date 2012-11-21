@@ -13,7 +13,9 @@ import il.ac.technion.misc.HashCodeUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -29,6 +31,7 @@ public class Placement {
 	private static final String delim = System.getProperty("line.separator");
 	private List<Host> hosts = null;
 	private List<VM> vms = null;
+	private Map<Host,List<VM>> originalPlacement = new HashMap<>();
 	
 	@XStreamOmitField
 	private int fHashCode = 0;
@@ -49,6 +52,9 @@ public class Placement {
 				host.setActivationCost(0.0);
 				host.activate();
 			}
+		}
+		for (Host host : hosts) {
+			originalPlacement.put(host, host.vms());
 		}
 	}
 	
@@ -143,6 +149,20 @@ public class Placement {
 	public void activateAll() {
 		for (Host host : hosts) {
 			host.activate();
+		}
+	}
+	
+	public void reset() {
+		for (Host host : hosts) {
+			host.clear();
+			for (VM vm : originalPlacement.get(host)) {
+				host.assign(vm);
+			}
+			if (host.usedCapacity() == 0) {
+				host.deactivate();
+			} else {
+				host.activate();
+			}
 		}
 	}
 }
