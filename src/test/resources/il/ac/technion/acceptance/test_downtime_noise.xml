@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test>
+	<dataFile>data1_small_backup.csv</dataFile>
+	<pack expensive="false" numExpensiveRacks="1" distributeExpensive="false">true</pack>
+	<backupHosts num="60">
+		<capacity>30</capacity>
+		<activationCost>2000</activationCost>
+		<activationCostPerSize>67</activationCostPerSize>
+		<hostBootTime>180</hostBootTime>
+	</backupHosts>
+	<vmBootTime>240</vmBootTime>
+	<numAffinities>10</numAffinities>
+	<SLA type="ha">
+		<range>
+			<start>99.9999</start>
+			<end>100.0</end>
+			<cost>0</cost>
+		</range>
+		<range>
+			<start>99.999</start>
+			<end>99.9999</end>
+			<cost>0.1</cost>
+		</range>
+		<range>
+			<start>99.99</start>
+			<end>99.999</end>
+			<cost>0.15</cost>
+		</range>
+		<range>
+			<start>99.95</start>
+			<end>99.99</end>
+			<cost>0.2</cost>
+		</range>
+		<range>
+			<start>0</start>
+			<end>99.95</end>
+			<cost>0.5</cost>
+		</range>
+	</SLA>
+	<downtime random="true">
+		<noise>0.01</noise>
+	</downtime>
+</test>
