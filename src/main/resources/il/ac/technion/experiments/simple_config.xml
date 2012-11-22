@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test>
-	<dataFile>C:\Users\assafi.TD-CSF\workspace\Greedy_Recovery\src\main\resources\il\ac\technion\experiments\data1_small_backup.csv</dataFile>
+	<dataFile>C:\Users\assafi.TD-CSF\workspace\Greedy_Recovery\src\main\resources\il\ac\technion\experiments\simple_case.csv</dataFile>
 	<pack expensive="false" numExpensiveRacks="1" distributeExpensive="false">true</pack>
 	<backupHosts num="60">
 		<capacity>30</capacity>
 		<activationCost>2000</activationCost>
 		<activationCostPerSize>67</activationCostPerSize>
-		<hostBootTime>180</hostBootTime>
+		<hostBootTime>0</hostBootTime>
 	</backupHosts>
 	<vmBootTime>240</vmBootTime>
-	<numAffinities>6</numAffinities>
+	<numAffinities>2</numAffinities>
 	<SLA type="ha">
 		<range>
 			<start>99.9999</start>
