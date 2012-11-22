@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 
 public class ExperimentsRunner {
 
@@ -85,7 +86,7 @@ public class ExperimentsRunner {
 	public ExperimentsRunner(File configFile) throws IOException, DataException, XPathExpressionException, ParserConfigurationException, SAXException, ConfigurationException {
 		this.tConfig = new TestConfiguration(configFile);
 		Injector experimentsInjector = Guice.createInjector(new ExperimentsModule(tConfig), new ProductionModule());
-		this.experiments = experimentsInjector.getInstance(Key.get(List.class, Experiment.class));
+		this.experiments = experimentsInjector.getInstance(Key.get(new TypeLiteral<List<Experimentable>>(){}, Experiment.class));
 		this.p = experimentsInjector.getInstance(Placement.class);
 	}
 	

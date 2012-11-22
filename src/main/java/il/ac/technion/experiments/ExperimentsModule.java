@@ -39,8 +39,8 @@ public class ExperimentsModule extends AbstractModule {
 	
 	@Provides
 	@Experiment
-	public List getExperiments(SemiRigidLSRecovery srr, RigidRecovery rr) {
-		return Arrays.asList(new Object[]{
+	public List<Experimentable> getExperiments(SemiRigidLSRecovery srr, RigidRecovery rr) {
+		return Arrays.asList(new Experimentable[]{
 				new RigidActiveRackRecovery_Experiment(rr, placement, tConfig.getNumAffinities()),
 				new RigidInactiveRackRecovery_Experiment(rr, placement, tConfig.getNumAffinities()),
 				new SemiRigidRackRecovery_Experiment(srr, placement, tConfig.getNumAffinities()),

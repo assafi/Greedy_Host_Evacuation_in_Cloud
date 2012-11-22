@@ -12,5 +12,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	il.ac.technion.datacenter.physical.HostTest.class,
+	il.ac.technion.datacenter.physical.PlacementTest.class,
 })
 public class AllTests {}

@@ -9,6 +9,7 @@ package il.ac.technion.datacenter.physical;
 import il.ac.technion.datacenter.physical.guice.PlacementModule;
 import il.ac.technion.datacenter.vm.VM;
 import il.ac.technion.gap.GAP_Alg;
+import il.ac.technion.gap.guice.ProductionModule;
 import il.ac.technion.misc.HashCodeUtil;
 
 import java.util.ArrayList;
@@ -20,7 +21,9 @@ import java.util.Map;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import com.google.java.contract.Requires;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -32,6 +35,7 @@ public class Placement {
 	private List<Host> hosts = null;
 	private List<VM> vms = null;
 	private Map<Host,List<VM>> originalPlacement = new HashMap<>();
+	private GAP_Alg gap = null;
 	
 	@XStreamOmitField
 	private int fHashCode = 0;
@@ -39,11 +43,23 @@ public class Placement {
 	public Placement(List<Host> hosts, List<VM> vms) {
 		this.hosts = hosts;
 		this.vms = vms;
+		/*
+		 * A default value for GAP is initialized, but no packing is done.
+		 * This will be used if repack() is called.
+		 */
+		Injector injector = Guice.createInjector(new ProductionModule());
+		this.gap = injector.getInstance(Key.get(GAP_Alg.class, Names.named("Min GAP")));
+		setAsOriginalPlacement(hosts);
 	}
 	
 	@Inject
 	public Placement(List<Host> hosts, List<VM> vms, @Named("Max GAP") GAP_Alg gap) {
 		this(hosts,vms);
+		pack(hosts, vms, gap);
+		setAsOriginalPlacement(hosts);
+	}
+
+	private void pack(List<Host> hosts, List<VM> vms, GAP_Alg gap) {
 		gap.solve(hosts,vms,true);
 		for (Host host : hosts) {
 			if (host.usedCapacity() == 0) {
@@ -53,6 +69,14 @@ public class Placement {
 				host.activate();
 			}
 		}
+	}
+
+	/**
+	 *Remembers the current VM assignments. These assignment is restored upon <code>reset()</code> call.
+	 * @param hosts The hosts with the VM assignments.
+	 */
+	private void setAsOriginalPlacement(List<Host> hosts) {
+		originalPlacement.clear();
 		for (Host host : hosts) {
 			originalPlacement.put(host, host.vms());
 		}
@@ -62,10 +86,9 @@ public class Placement {
 		for (Host host : hosts) {
 			host.clear();
 		}
-		Injector injector = Guice.createInjector(new PlacementModule(hosts, vms));
 		if (reshuffleVMs) 
 			Collections.shuffle(vms);
-		injector.getInstance(Placement.class);
+		pack(hosts, vms, gap);
 	}
 	
 	public void twoPhaseRepacking(List<VM> firstPhaseVMs, boolean reshuffleVMs) {
@@ -79,6 +102,7 @@ public class Placement {
 		injector.getInstance(Placement.class);
 		secondPhaseVMs.addAll(firstPhaseVMs);
 		vms = secondPhaseVMs;
+		setAsOriginalPlacement(hosts);
 	}
 	
 	@Override

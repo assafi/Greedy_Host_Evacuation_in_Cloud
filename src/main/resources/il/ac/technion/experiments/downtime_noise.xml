@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test>
-	<dataFile>C:\Users\Assaf\git\Greedy_Host_Evacuation_in_Cloud\src\main\resources\il\ac\technion\experiments\data1_small_backup.csv</dataFile>
+	<dataFile>C:\Users\Assaf\SkyDrive\Workspace\Greedy_Host_Evacuation_in_Cloud\src\main\resources\il\ac\technion\experiments\data1_small_backup.csv</dataFile>
 	<pack expensive="false" numExpensiveRacks="1" distributeExpensive="false">true</pack>
 	<backupHosts num="60">
 		<capacity>30</capacity>
@@ -9,7 +9,7 @@
 		<hostBootTime>180</hostBootTime>
 	</backupHosts>
 	<vmBootTime>240</vmBootTime>
-	<numAffinities>12</numAffinities>
+	<numAffinities>20</numAffinities>
 	<SLA type="ha">
 		<range>
 			<start>99.9999</start>
