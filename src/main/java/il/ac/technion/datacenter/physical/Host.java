@@ -188,9 +188,11 @@ public class Host {
 	 * Clears a host from all of it's guest VMs
 	 */
 	@Ensures("usedCapacity() == 0")
-	public void clear() {
+	public boolean clear() {
+		boolean $ = true;
 		for (VM vm : vms()) {
-			unassign(vm);
+			$ &= unassign(vm);
 		}
+		return $;
 	}
 }

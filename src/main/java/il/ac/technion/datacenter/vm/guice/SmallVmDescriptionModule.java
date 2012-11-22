@@ -9,7 +9,7 @@ import com.google.inject.Provides;
 
 public class SmallVmDescriptionModule extends AbstractModule {
 	
-	public static final double ALPHA = 300.0;
+	public static final double ALPHA = 1.0;
 	public static final long BASE = (long) (276 * ALPHA);
 	
 	@Override

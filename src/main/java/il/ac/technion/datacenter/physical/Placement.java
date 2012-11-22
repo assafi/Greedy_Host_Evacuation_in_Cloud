@@ -152,11 +152,12 @@ public class Placement {
 		}
 	}
 	
-	public void reset() {
+	public boolean reset() {
+		boolean $ = true;
 		for (Host host : hosts) {
-			host.clear();
+			$ &= host.clear();
 			for (VM vm : originalPlacement.get(host)) {
-				host.assign(vm);
+				$ &= host.assign(vm);
 			}
 			if (host.usedCapacity() == 0) {
 				host.deactivate();
@@ -164,5 +165,6 @@ public class Placement {
 				host.activate();
 			}
 		}
+		return $;
 	}
 }
