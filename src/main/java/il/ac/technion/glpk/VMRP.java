@@ -54,7 +54,7 @@ public class VMRP  {
 		glp_print_mip(lp, "vmrp.glp");
 		glp_iocp iocp = new glp_iocp();
 		glp_init_iocp(iocp);
-//		iocp.setPresolve(GLP_ON);
+		iocp.setPresolve(GLP_ON);
 		logger.info("Solving VMRP ...");
 		try {
 			if (glp_intopt(lp,iocp) != 0) {
