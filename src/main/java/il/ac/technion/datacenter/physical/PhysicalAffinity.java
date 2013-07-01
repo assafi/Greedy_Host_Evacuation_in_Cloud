@@ -27,13 +27,13 @@ public class PhysicalAffinity extends Affinity<Host>{
 		super(type,id);
 	}
 	
-	public List<Host> getHosts() {
+	public List<Host> hosts() {
 		return getElements();
 	}
 
-	public List<VM> getVMs() {
-		List<VM> vms = new LinkedList<VM>();
-		for (Host h : getHosts()) {
+	public List<VM> vms() {
+		List<VM> vms = new LinkedList<>();
+		for (Host h : hosts()) {
 			vms.addAll(h.vms());
 		}
 		return vms;
@@ -44,10 +44,22 @@ public class PhysicalAffinity extends Affinity<Host>{
 	 * @return A list of all hosts residing in the physical affinities list.
 	 */
 	public static List<Host> extractHosts(Collection<PhysicalAffinity> paList) {
-		List<Host> hosts = new LinkedList<Host>();
+		List<Host> hosts = new LinkedList<>();
 		for (PhysicalAffinity pa : paList) {
-			hosts.addAll(pa.getHosts());
+			hosts.addAll(pa.hosts());
 		}
 		return hosts;
+	}
+	
+	/**
+	 * @param paList A lsit of physical affinities
+	 * @return A list of all vms residing in the physical affinities hosts.
+	 */
+	public static List<VM> extractVMs(Collection<PhysicalAffinity> paList) {
+		List<VM> vms = new LinkedList<>();
+		for (PhysicalAffinity pa: paList) {
+			vms.addAll(pa.vms());
+		}
+		return vms;
 	}
 }

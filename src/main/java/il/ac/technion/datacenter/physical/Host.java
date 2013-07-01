@@ -75,10 +75,14 @@ public class Host {
 		return bootTime;
 	}
 
-	public boolean isActive() {
+	public boolean active() {
 		return active;
 	}
 
+	public boolean inactive() {
+		return !active;
+	}
+	
 	public void activate() {
 		this.active = true;
 	}
@@ -157,6 +161,10 @@ public class Host {
 		return new Host(id,bin.capacity,activationCost,bootTime);
 	}
 
+	public void resetActivation() {
+		this.active = (this.activationCost == 0.0);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -178,6 +186,10 @@ public class Host {
 
 	public void setActivationCost(double ac) {
 		this.activationCost = ac;
+	}
+	
+	public double getActivationCost() {
+		return this.activationCost;
 	}
 
 	public HostConfig getConfig() {

@@ -79,7 +79,7 @@ public class SemiRigidRecoveryTest {
 		System.out.println(rp);
 		assertTrue(rp.getMap().get(h3).contains(vm1));
 		assertTrue(rp.getMap().get(h3).contains(vm2));
-		assertFalse(h3.isActive());
+		assertFalse(h3.active());
 	}
 	
 	@Test
@@ -112,7 +112,7 @@ public class SemiRigidRecoveryTest {
 		System.out.println(rp);
 		assertTrue(rp.getMap().get(h3).contains(vm1));
 		assertTrue(rp.getMap().get(h3).contains(vm2));
-		assertTrue(h3.isActive());
+		assertTrue(h3.active());
 	}
 	
 	@Test
@@ -150,7 +150,7 @@ public class SemiRigidRecoveryTest {
 		RecoveryPlan rp = srr.hostsRecovery(hosts);
 		System.out.println(rp);
 		assertTrue(2.0 == rp.cost());
-		assertTrue(h3.isActive());
+		assertTrue(h3.active());
 	}
 	
 	@Test

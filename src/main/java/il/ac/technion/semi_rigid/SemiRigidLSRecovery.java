@@ -106,7 +106,7 @@ public class SemiRigidLSRecovery {
 	private List<Host> sieveActive(List<Host> hosts) {
 		List<Host> $ = new ArrayList<Host>(hosts.size());
 		for (Host h : hosts) {
-			if (!h.isActive())
+			if (!h.active())
 				$.add(h);
 		}
 		return $;

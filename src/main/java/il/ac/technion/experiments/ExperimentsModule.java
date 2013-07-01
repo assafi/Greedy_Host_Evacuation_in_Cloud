@@ -11,6 +11,7 @@ import il.ac.technion.data.DataConverter;
 import il.ac.technion.data.DataCoverterImpl;
 import il.ac.technion.data.DataException;
 import il.ac.technion.datacenter.physical.Placement;
+import il.ac.technion.glpk.VMRP;
 import il.ac.technion.rigid.RigidRecovery;
 import il.ac.technion.semi_rigid.SemiRigidLSRecovery;
 
@@ -44,7 +45,8 @@ public class ExperimentsModule extends AbstractModule {
 				new RigidActiveRackRecovery_Experiment(rr, placement, tConfig.getNumAffinities()),
 				new RigidInactiveRackRecovery_Experiment(rr, placement, tConfig.getNumAffinities()),
 				new SemiRigidRackRecovery_Experiment(srr, placement, tConfig.getNumAffinities()),
-				new SemiRegidHostRecovery_Experiment(srr, placement)
+				new SemiRegidHostRecovery_Experiment(srr, placement),
+				new OptimalRecovery_Experiment(new VMRP(), placement, tConfig.getNumAffinities()),
 		});
 	}
 

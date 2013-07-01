@@ -4,6 +4,17 @@
 	<groupId>Greedy_Recovery</groupId>
 	<artifactId>Greedy_Recovery</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
+	<repositories>
+		<repository>
+			<id>XypronRelease</id>
+			<name>Xypron Release</name>
+			<url>http://rsync.xypron.de/repository</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+
+
 	<build>
 		<directory>target</directory>
 		<outputDirectory>target/classes</outputDirectory>
@@ -50,6 +61,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.java.contracts</groupId>
@@ -95,5 +107,15 @@
 			<version>0.5.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.gnu.glpk</groupId>
+			<artifactId>glpk-java</artifactId>
+			<version>1.0.29</version>
+		</dependency>
+		<dependency>
+            <groupId>de.xypron.linopt</groupId>
+            <artifactId>linopt</artifactId>
+            <version>1.8</version>
+        </dependency>
 	</dependencies>
 </project>

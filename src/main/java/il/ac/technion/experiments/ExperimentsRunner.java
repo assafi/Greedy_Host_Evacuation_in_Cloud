@@ -29,8 +29,6 @@ import com.google.inject.TypeLiteral;
 
 public class ExperimentsRunner {
 
-//	private static final String configFileName = "test_downtime_noise.xml";
-	
 	private static final String delim = System.getProperty("line.separator");
 	private static Logger logger = Logger.getLogger(ExperimentsRunner.class);
 
@@ -42,6 +40,13 @@ public class ExperimentsRunner {
 	
 	private static final int NUM_ARGS = 1;
 	private static final int E_BADARGS = 65;
+	
+	public ExperimentsRunner(File configFile) throws IOException, DataException, XPathExpressionException, ParserConfigurationException, SAXException, ConfigurationException {
+		this.tConfig = new TestConfiguration(configFile);
+		Injector experimentsInjector = Guice.createInjector(new ExperimentsModule(tConfig), new ProductionModule());
+		this.experiments = experimentsInjector.getInstance(Key.get(new TypeLiteral<List<Experimentable>>(){}, Experiment.class));
+		this.p = experimentsInjector.getInstance(Placement.class);
+	}
 	
 	public static void main(String[] args) {
 		
@@ -57,9 +62,9 @@ public class ExperimentsRunner {
 			System.exit(E_BADARGS);
 		}
 		
-		ExperimentsRunner experimentSuite = null;
 		try {
-			experimentSuite = new ExperimentsRunner(configFile);
+			ExperimentsRunner experimentSuite = new ExperimentsRunner(configFile);
+			experimentSuite.runExperiments();
 		} catch (XPathExpressionException | IOException | DataException
 				| ParserConfigurationException | SAXException | ConfigurationException e) {
 			System.err.println(e.getMessage());
@@ -70,8 +75,6 @@ public class ExperimentsRunner {
 			}
 			System.exit(E_BADARGS);
 		}
-		
-		experimentSuite.runExperiments();
 	}
 	
 	private static void usage() {
@@ -81,13 +84,6 @@ public class ExperimentsRunner {
 	private static void usage(String errMsg) {
 		System.err.println("Error: " + errMsg);
 		usage();
-	}
-	
-	public ExperimentsRunner(File configFile) throws IOException, DataException, XPathExpressionException, ParserConfigurationException, SAXException, ConfigurationException {
-		this.tConfig = new TestConfiguration(configFile);
-		Injector experimentsInjector = Guice.createInjector(new ExperimentsModule(tConfig), new ProductionModule());
-		this.experiments = experimentsInjector.getInstance(Key.get(new TypeLiteral<List<Experimentable>>(){}, Experiment.class));
-		this.p = experimentsInjector.getInstance(Placement.class);
 	}
 	
 	private void runExperiments() {

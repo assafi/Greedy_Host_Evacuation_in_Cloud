@@ -6,6 +6,7 @@
  */
 package il.ac.technion.acceptance;
 
+import static org.junit.Assert.*;
 import il.ac.technion.config.TestConfiguration;
 import il.ac.technion.data.DataConverter;
 import il.ac.technion.data.DataCoverterImpl;
@@ -14,6 +15,7 @@ import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.datacenter.physical.Placement;
 import il.ac.technion.datacenter.vm.VM;
+import il.ac.technion.glpk.VMRP;
 import il.ac.technion.rigid.RecoveryPlan;
 import il.ac.technion.rigid.RigidRecovery;
 import il.ac.technion.semi_rigid.SemiRigidLSRecovery;
@@ -71,6 +73,22 @@ public class AbstractAcceptanceTest {
 		logger.info(delim + rp.summary());
 		// logger.info(delim + rp);
 	}
+	
+	@Test
+	public void optimalIntegerProgramSolutionSemiRigidAffiniyOfK() throws Exception {
+		logger.info(delim + "===== Optimal Rack Recovery with Backup Hosts Activation =====");
+
+		List<PhysicalAffinity> la = p.groupHostsToNAffinities("Rack",
+				tConfig.getNumAffinities());
+		int maxNumberOfHostsInRack = la.get(0).size();
+		logger.info("Max number of hosts in rack: " + maxNumberOfHostsInRack);
+		updateExpensiveAffinities(la,tConfig);
+
+		RecoveryPlan rp = new VMRP().solve(la);
+//		logger.info(delim + rp.summary());
+		 logger.info(delim + rp);
+		 assertTrue(rp.cost() < 86.0);
+	}
 
 	/**
 	 * Rack recovery that can activate additional hosts. 
@@ -80,7 +98,7 @@ public class AbstractAcceptanceTest {
 	 */
 //	@Ignore
 	@Test
-	public void testSemiRigidAffinityOfK() throws IOException, DataException {
+	public void localSearchSemiRigidAffinityOfK() throws IOException, DataException {
 		logger.info(delim + "===== Rack Recovery with Backup Hosts Activation =====");
 
 		List<PhysicalAffinity> la = p.groupHostsToNAffinities("Rack",
@@ -207,7 +225,7 @@ public class AbstractAcceptanceTest {
 		if (numExpensiveRacks == 0) return;
 		for (PhysicalAffinity physicalAffinity : la) {
 			if (physicalAffinity.id < numExpensiveRacks) {
-				for (VM vm : physicalAffinity.getVMs()) {
+				for (VM vm : physicalAffinity.vms()) {
 					vm.type.setContractCost(vm.type.getContractCost() * contractFactor);
 				}
 			}
@@ -220,7 +238,7 @@ public class AbstractAcceptanceTest {
 			if (pa.type == "backup") {
 				pa = la.get(0);
 			}
-			List<Host> hostsInPA = pa.getHosts();
+			List<Host> hostsInPA = pa.hosts();
 			Host host = hostsInPA.get(i % hostsInPA.size());
 			int j = 1;
 			while (host.freeCapacity() == host.capacity()) {

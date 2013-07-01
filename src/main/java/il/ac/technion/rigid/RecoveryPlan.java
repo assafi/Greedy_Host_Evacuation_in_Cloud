@@ -12,6 +12,7 @@ import il.ac.technion.knapsack.Bin;
 import il.ac.technion.knapsack.Item;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -37,18 +38,18 @@ public class RecoveryPlan {
 	
 	private static final String delim = System.getProperty("line.separator");
 	
-	public RecoveryPlan(List<Host> hosts) {
+	public RecoveryPlan(Collection<Host> hosts) {
 		for (Host host : hosts) {
 			rp.put(host, new LinkedList<VM>());
 		}
 	}
 
 	@Requires("binsPackings.length == targetHosts.size()")
-	public void add(Bin[] binsPackings, List<Host> targetHosts, List<VM> recoveredVMs) {
+	public void add(Bin[] packedBins, List<Host> targetHosts, List<VM> recoveredVMs) {
 		for (int i = 0; i < targetHosts.size(); i++) {
 			Host target = targetHosts.get(i);
 			List<VM> recoveredVMsToTarget = rp.get(target);
-			for (Item item : binsPackings[i].assignedItems()) {
+			for (Item item : packedBins[i].assignedItems()) {
 				VM recoveredVM = recoveredVMs.get(item.id);
 				if (recoveredVMsToTarget.size() == 0) {
 					updateHostStats(target); 
@@ -58,9 +59,20 @@ public class RecoveryPlan {
 			}
 		}
 	}
+	
+	public void add(Host target, List<VM> recoveredVMs) {
+		List<VM> recoveredVMsToTarget = rp.get(target);
+		for (VM vm : recoveredVMs) {
+			if (recoveredVMsToTarget.size() == 0) {
+				updateHostStats(target); 
+			}
+			recoveredVMsToTarget.add(vm);
+			updateStats(target,vm);
+		}
+	}
 
 	private void updateHostStats(Host target) {
-		if (target.isActive()) {
+		if (target.active()) {
 			numActiveHosts++;
 		} 
 		totalCost += target.cost();
@@ -145,7 +157,7 @@ public class RecoveryPlan {
 			}});
 		
 		for (Host h : hosts) {
-			sb.append("Host #" + h.id() + " [" + (h.isActive() ? "active - " + h.cost() : "inactive") + "]: ");
+			sb.append("Host #" + h.id() + " [" + (h.active() ? "active - " + h.cost() : "inactive") + "]: ");
 			for (VM vm : rp.get(h)) {
 				sb.append("VM-#" + vm.id + " [" + vm.cost(h) + "] ");
 			}

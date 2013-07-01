@@ -37,7 +37,7 @@ public class HostTest {
 		Assert.assertTrue(host.assign(vm));
 		host.activate();
 		Assert.assertTrue(host.clear());
-		Assert.assertTrue(host.isActive());
+		Assert.assertTrue(host.active());
 		Assert.assertTrue(host.assign(vm));
 		Assert.assertTrue(host.unassign(vm));
 		host.deactivate();

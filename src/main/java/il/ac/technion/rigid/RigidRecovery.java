@@ -34,11 +34,11 @@ public class RigidRecovery {
 		RecoveryPlan rp = new RecoveryPlan(hosts);
 		int vmCount = 0;
 		for (PhysicalAffinity pa : paList) {
-			List<Host> filteredHosts = new ArrayList<Host>(hosts);
-			filteredHosts.removeAll(pa.getHosts());
-			List<VM> recoveredVMs = pa.getVMs();
-			vmCount += recoveredVMs.size();
-			rp.add(gap.solve(filteredHosts,recoveredVMs,false),filteredHosts,recoveredVMs);
+			List<Host> potentialTargetHosts = new ArrayList<Host>(hosts);
+			potentialTargetHosts.removeAll(pa.hosts());
+			List<VM> vmsToRecover = pa.vms();
+			vmCount += vmsToRecover.size();
+			rp.add(gap.solve(potentialTargetHosts,vmsToRecover,false),potentialTargetHosts,vmsToRecover);
 		}
 		if (rp.recoveredVMsCount() == vmCount) {
 			rp.full();
