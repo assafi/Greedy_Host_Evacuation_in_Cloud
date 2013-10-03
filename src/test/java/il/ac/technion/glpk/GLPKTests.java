@@ -96,7 +96,7 @@ public class GLPKTests {
 				throw new Exception("The problem could not be solved");
 			}	
 			logger.info("Solution found");
-			GLPKUtils.writeMipSolution(lp);
+			GLPKUtils.asMipSolution(lp);
 			assertEquals(10,glp_mip_obj_val(lp),1e-5);
 		} finally {
 			logger.info("Clean up");

@@ -6,7 +6,7 @@
  */
 package il.ac.technion.glpk;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.PhysicalAffinity;
@@ -26,7 +26,7 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-public class VMRPTests {
+public class AbstractVMRPTests {
 
 	private Injector inj = Guice.createInjector(new ProductionModule(), new AppEngineSLAModule());
 	
@@ -34,6 +34,12 @@ public class VMRPTests {
 	
 	private SLA sla1 = null;
 	private SLA sla2 = null;
+
+	private final VMRP vmrp;
+	
+	protected AbstractVMRPTests(VMRP vmrp) {
+		this.vmrp = vmrp;
+	}
 	
 	@Before
 	public void initSLA() {
@@ -74,7 +80,7 @@ public class VMRPTests {
 		h1.deactivate();
 		h1.join(al.get(1));
 		
-		RecoveryPlan rp = new VMRP().solve(al);
+		RecoveryPlan rp = vmrp.solve(al);
 		System.out.println(rp);
 		assertTrue(rp.getMap().get(h1).contains(vm0));
 		assertTrue(rp.getMap().get(h1).contains(vm1));
@@ -85,12 +91,12 @@ public class VMRPTests {
 	public void solveComplexAffinityProblem() throws Exception {
 		List<PhysicalAffinity> al = new ArrayList<PhysicalAffinity>(3);
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			al.add(new PhysicalAffinity("test-affinity",i));
 		}
 				
 		Host h0 = new Host(0, 512, 0.0, Period.minutes(3));
-		Host h1 = new Host(1, 512, 0.0, Period.minutes(3));
+		Host h1 = new Host(1, 512, 1.0, Period.minutes(3));
 		Host h2 = new Host(2, 512, 10.0, Period.minutes(100));
 		Host h3 = new Host(3, 256, 2.0, Period.minutes(100));
 		
@@ -120,9 +126,9 @@ public class VMRPTests {
 		h3.deactivate();
 		h3.join(al.get(1));
 		
-		RecoveryPlan rp = new VMRP().solve(al);
+		RecoveryPlan rp = vmrp.solve(al);
 		System.out.println(rp);
-		assertTrue(rp.getMap().get(h3).contains(vm0));
-		assertTrue(rp.getMap().get(h2).contains(vm1));
+		assertEquals(1,rp.numVMs(h3));
+		assertEquals(1,rp.numVMs(h2));
 	}
 }

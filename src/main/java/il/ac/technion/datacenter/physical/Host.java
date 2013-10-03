@@ -188,7 +188,7 @@ public class Host {
 		this.activationCost = ac;
 	}
 	
-	public double getActivationCost() {
+	public double activationCost() {
 		return this.activationCost;
 	}
 
@@ -206,5 +206,9 @@ public class Host {
 			$ &= unassign(vm);
 		}
 		return $;
+	}
+
+	public int numVMs() {
+		return vms.size();
 	}
 }

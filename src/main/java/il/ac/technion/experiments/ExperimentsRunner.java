@@ -12,7 +12,9 @@ import il.ac.technion.data.DataException;
 import il.ac.technion.datacenter.physical.Placement;
 import il.ac.technion.gap.guice.ProductionModule;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,8 +40,9 @@ public class ExperimentsRunner {
 
 	private List<Experimentable> experiments = null;
 	
-	private static final int NUM_ARGS = 1;
+	private static final int NUM_ARGS = 2;
 	private static final int E_BADARGS = 65;
+	private static final String EOL = System.getProperty("line.separator");;
 	
 	public ExperimentsRunner(File configFile) throws IOException, DataException, XPathExpressionException, ParserConfigurationException, SAXException, ConfigurationException {
 		this.tConfig = new TestConfiguration(configFile);
@@ -62,9 +65,12 @@ public class ExperimentsRunner {
 			System.exit(E_BADARGS);
 		}
 		
+		String outFilePath = args[1];
+		File outFile = new File(outFilePath);
+		
 		try {
 			ExperimentsRunner experimentSuite = new ExperimentsRunner(configFile);
-			experimentSuite.runExperiments();
+			experimentSuite.runExperiments(outFile);
 		} catch (XPathExpressionException | IOException | DataException
 				| ParserConfigurationException | SAXException | ConfigurationException e) {
 			System.err.println(e.getMessage());
@@ -78,20 +84,28 @@ public class ExperimentsRunner {
 	}
 	
 	private static void usage() {
-		System.err.println("Arguments: <config-file>");
+		logger.error("Arguments: <config-file> <out-file>");
 	}
 
 	private static void usage(String errMsg) {
-		System.err.println("Error: " + errMsg);
+		logger.error("Error: " + errMsg);
 		usage();
 	}
 	
-	private void runExperiments() {
+	private void runExperiments(File outFile) {
 		logger.info("===== Experiments Placement =====" + delim);
 		logger.info(p + delim);
-		for (Experimentable experiment : experiments) {
-			System.out.print(experiment.runExperiment() + ",");
+		try (BufferedWriter br = new BufferedWriter(new FileWriter(outFile,true))) {
+			for (Experimentable experiment : experiments) {
+				long start = System.currentTimeMillis();
+				br.append(experiment.runExperiment() + ",");	
+				long elapsed = System.currentTimeMillis() - start;
+				br.append(elapsed+",");
+			}
+			br.append(EOL);
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.fatal(e.getMessage());
 		}
-		System.out.println();
 	}
 }

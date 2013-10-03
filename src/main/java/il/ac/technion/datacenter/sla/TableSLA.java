@@ -171,16 +171,7 @@ public class TableSLA extends SLA {
 			next = getHighestRange();
 		}
 		
-		private Range getLowestRange() {
-			Range $ = null;
-			for (Range range : ranges) {
-				if ($ == null || $.left > range.left)
-					$ = range;
-			}
-			return $;
-		}
-		
-		private Range getHighestRange() {
+		public Range getHighestRange() {
 			Range $ = null;
 			for (Range range : ranges) {
 				if ($ == null || $.right < range.right)
@@ -189,23 +180,13 @@ public class TableSLA extends SLA {
 			return $;
 		}
 		
-		private Range findRange(double value) {
+		public Range findRange(double value) {
 			for (Range range : ranges) {
 				if (range.inRange(value)) {
 					return range;
 				}
 			}
 			return null;
-		}
-		
-		private int rangeCount(double value) {
-			int count = 0;
-			for (Range range : ranges) {
-				if (range.inRange(value)) {
-					++count;
-				}
-			}
-			return count;
 		}
 		
 		@Override

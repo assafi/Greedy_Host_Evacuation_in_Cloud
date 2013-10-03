@@ -15,7 +15,7 @@ import il.ac.technion.datacenter.physical.Host;
 import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.datacenter.physical.Placement;
 import il.ac.technion.datacenter.vm.VM;
-import il.ac.technion.glpk.VMRP;
+import il.ac.technion.glpk.VMRPLowLevelImpl;
 import il.ac.technion.rigid.RecoveryPlan;
 import il.ac.technion.rigid.RigidRecovery;
 import il.ac.technion.semi_rigid.SemiRigidLSRecovery;
@@ -84,7 +84,7 @@ public class AbstractAcceptanceTest {
 		logger.info("Max number of hosts in rack: " + maxNumberOfHostsInRack);
 		updateExpensiveAffinities(la,tConfig);
 
-		RecoveryPlan rp = new VMRP().solve(la);
+		RecoveryPlan rp = new VMRPLowLevelImpl().solve(la);
 //		logger.info(delim + rp.summary());
 		 logger.info(delim + rp);
 		 assertTrue(rp.cost() < 86.0);

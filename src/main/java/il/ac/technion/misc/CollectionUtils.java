@@ -43,4 +43,13 @@ public class CollectionUtils {
 		}
 		return false;
 	}
+	
+	public static <T> List<Tuple<T,Integer>> zip(Collection<T> col) {
+		List<Tuple<T,Integer>> $ = new ArrayList<>(col.size());
+		int idx = 0;
+		for (T t: col) {
+			$.add(new Tuple<>(t,idx++));
+		}
+		return $;
+	}
 }

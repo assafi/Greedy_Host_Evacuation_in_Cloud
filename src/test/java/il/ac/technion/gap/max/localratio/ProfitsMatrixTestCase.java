@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ProfitsMatrixTestCase {
@@ -30,7 +31,7 @@ public class ProfitsMatrixTestCase {
 		Assert.assertEquals(1.0, pm1.getCurrentColumn()[0]);
 	}
 	
-//	@Ignore
+	@Ignore
 	@Test(expected = com.google.java.contract.PreconditionError.class)
 	public void testGetLastResidualProfitMatrix() {
 		ProfitsMatrix pm1 = new ProfitsMatrix(new double[][] {{1}});

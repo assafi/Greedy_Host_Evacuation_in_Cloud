@@ -23,17 +23,19 @@ import java.util.Map;
 import org.gnu.glpk.glp_prob;
 
 class GLPKUtils {
-	public static void writeMipSolution(glp_prob lp) {
+	private static final String EOL = System.getProperty("line.separator");
+	
+	public static String asMipSolution(glp_prob lp) {
 		String probName = glp_get_obj_name(lp);
 		double val = glp_mip_obj_val(lp);
-		
-		System.out.println(probName + " = " + val);
-		System.out.println("****************");
+		StringBuilder sb = new StringBuilder(probName + " = " + val + EOL);
+		sb.append("****************" + EOL);
 		for (int i = 1; i <= glp_get_num_cols(lp); i++) {
 			String varName = glp_get_col_name(lp,i);
 			double colVal = glp_mip_col_val(lp,i);
-			System.out.println(varName + " = " + colVal);
+			sb.append(varName + " = " + colVal + EOL);
 		}
+		return sb.toString();
 	}
 	
 	public static RecoveryPlan extractRecoveryPlan(final glp_prob lp, final int y[], final int m[][],
@@ -75,6 +77,7 @@ class GLPKUtils {
 				}
 			}));
 		}
+		rp.full();
 		return rp;
 	}
 }

@@ -17,5 +17,6 @@ il.ac.technion.xstream_conversion.AllTests.class,
 il.ac.technion.datacenter.AllTests.class,
 il.ac.technion.rigid.AllTests.class,
 il.ac.technion.semi_rigid.AllTests.class,
-il.ac.technion.data.AllTests.class,})
+il.ac.technion.data.AllTests.class,
+il.ac.technion.glpk.AllTests.class,})
 public class AllTests {}

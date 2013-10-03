@@ -8,7 +8,7 @@ package il.ac.technion.experiments;
 
 import il.ac.technion.datacenter.physical.PhysicalAffinity;
 import il.ac.technion.datacenter.physical.Placement;
-import il.ac.technion.glpk.VMRP;
+import il.ac.technion.glpk.VMRPLowLevelImpl;
 import il.ac.technion.rigid.RecoveryPlan;
 
 import java.util.List;
@@ -22,12 +22,12 @@ public class OptimalRecovery_Experiment implements Experimentable {
 	private static Logger logger = Logger.getLogger(OptimalRecovery_Experiment.class);
 	private static final String delim = System.getProperty("line.separator");
 	
-	private VMRP vmrp = null;
+	private VMRPLowLevelImpl vmrp = null;
 	private Placement p = null;
 	private int numRacks = 1;
 	
 	@Inject
-	public OptimalRecovery_Experiment(VMRP vmrp, Placement p, int numRacks) {
+	public OptimalRecovery_Experiment(VMRPLowLevelImpl vmrp, Placement p, int numRacks) {
 		this.vmrp = vmrp;
 		this.p = p;
 		this.numRacks = numRacks;

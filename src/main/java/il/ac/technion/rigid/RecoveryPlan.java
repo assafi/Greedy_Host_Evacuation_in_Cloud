@@ -177,4 +177,8 @@ public class RecoveryPlan {
 	public boolean isComplete() {
 		return completeRecovery;
 	}
+
+	public int numVMs(Host h) {
+		return rp.get(h).size();
+	}
 }

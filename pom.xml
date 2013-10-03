@@ -59,6 +59,18 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>exec-maven-plugin</artifactId> -->
+<!-- 				<version>1.2.1</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<goals> -->
+<!-- 							<goal>java</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
 		</plugins>
 	</build>
 
@@ -113,9 +125,9 @@
 			<version>1.0.29</version>
 		</dependency>
 		<dependency>
-            <groupId>de.xypron.linopt</groupId>
-            <artifactId>linopt</artifactId>
-            <version>1.8</version>
-        </dependency>
+			<groupId>de.xypron.linopt</groupId>
+			<artifactId>linopt</artifactId>
+			<version>1.8</version>
+		</dependency>
 	</dependencies>
 </project>
